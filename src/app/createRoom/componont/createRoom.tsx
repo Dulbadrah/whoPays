@@ -69,7 +69,7 @@ export default function CreateRoomForm() {
     >
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
         {" "}
-        {/* Using Tailwind's shadow-lg for card-like appearance */}
+      
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Өрөө Үүсгэх
         </h1>
