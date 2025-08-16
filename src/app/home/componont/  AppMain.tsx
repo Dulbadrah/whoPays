@@ -5,25 +5,26 @@ import { Plus, Users } from "lucide-react";
 
 import AnimatedDot from "./AnimatedDot";
 
-import { useRouter } from "next/navigation"; // ⬅️ зөвхөн энэ ашиглана
+import { useRouter } from "next/navigation"; 
 import BackgroundDot from "./ BackgroundDot";
 import ActionButton from "./ ActionButton";
 import Link from "next/link";
+
 
 const AppMain: React.FC = () => {
   const router = useRouter();
 
   // ROOM ҮҮСГЭХ ФУНКЦ
   const handleCreateRoom = () => {
-    // Жишээ нь random ID-тай шинэ room page рүү шууд оруулах
-    router.push(`/room`);
+    
+    router.push(`/createRoom`);
   };
 
   // ROOM НЭВТРЭХ ФУНКЦ
   const handleJoinRoom = () => {
-    // Жишээ нь тодорхой room ID-руу орох
-    const existingRoomId = 123; 
-    router.push(`/room/${existingRoomId}`);
+   
+   
+    router.push(`/joinRoom`); // 12345-г өөрийн room code-оор сольж болно
   };
 
   return (
