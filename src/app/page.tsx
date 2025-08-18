@@ -4,10 +4,11 @@ import React from "react";
 
 import { useRouter } from "next/navigation"; 
 import { Plus, Users } from "lucide-react";
+import BackgroundDot from "./components/BackgroundDot";
+import ActionButton from "./components/ActionButton";
+import AnimatedDot from "./components/AnimatedDot";
 
-import BackgroundDot from "../home/components/BackgroundDot";
-import ActionButton from "../home/components/ActionButton";
-import AnimatedDot from "../home/components/AnimatedDot";
+
 
 const AppMain: React.FC = () => {
   const router = useRouter();
