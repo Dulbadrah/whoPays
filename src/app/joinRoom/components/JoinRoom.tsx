@@ -13,7 +13,6 @@ interface RoomDataResponse {
 
 export default function JoinRoomForm() {
   const [code, setCode] = useState("");
-  const [participantName, setParticipantName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [displayRoomName, setDisplayRoomName] = useState("");
@@ -32,11 +31,6 @@ export default function JoinRoomForm() {
       setIsLoading(false);
       return;
     }
-    if (!participantName.trim()) {
-      setErrorMessage("Оролцогчийн нэрийг оруулна уу.");
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch(`http://localhost:4200/room/${trimmed}`, {
@@ -45,29 +39,15 @@ export default function JoinRoomForm() {
           "Content-Type": "application/json",
         },
       });
-      
-      if (!response.ok) {
-        if (response.status === 404) {
-          setErrorMessage("Өгөгдсөн кодтой өрөө олдсонгүй.");
-        } else if (response.status === 500) {
-          setErrorMessage("Серверийн алдаа гарлаа. Дараа дахин оролдоно уу.");
-        } else {
-          setErrorMessage(`Алдаа гарлаа (${response.status}). Дахин оролдоно уу.`);
-        }
-        setIsLoading(false);
-        return;
-      }
-
       const data: RoomDataResponse = await response.json();
 
-      if (data.room) {
+      if (response.ok && data.room) {
         setDisplayRoomName(data.room.roomname);
         setDisplayRoomCode(data.room.code);
         setIsSuccess(true);
         setCode("");
-        setParticipantName("");
       } else {
-        setErrorMessage("Өрөөний мэдээлэл олдсонгүй.");
+        setErrorMessage(data.message || "Өгөгдсөн кодтой өрөө олдсонгүй.");
       }
     } catch (err) {
       console.error("Error joining room:", err);
@@ -113,22 +93,6 @@ export default function JoinRoomForm() {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="participantName"
-              className="block text-gray-700 text-sm font-medium mb-2"
-            >
-              Таны нэр:
-            </label>
-            <input
-              type="text"
-              id="participantName"
-              name="participantName"
-              className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
-              placeholder="Жишээ нь: 'Бат-Эрдэнэ'"
-              value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
-              disabled={isLoading}
-            />
           </div>
           <button
             id="joinRoomBtn"

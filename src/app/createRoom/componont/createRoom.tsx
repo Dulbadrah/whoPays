@@ -9,7 +9,6 @@ interface CreateRoomFormProps {
 
 export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
   const [roomName, setRoomName] = useState<string>("");
-  const [participantName, setParticipantName] = useState<string>("");
   const [displayRoomName, setDisplayRoomName] = useState<string>("");
   const [displayRoomCode, setDisplayRoomCode] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -33,11 +32,7 @@ export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
       setIsLoading(false);
       return;
     }
-    if (!participantName.trim()) {
-      setErrorMessage("Оролцогчийн нэрийг оруулна уу.");
-      setIsLoading(false);
-      return;
-    }
+ 
 
     try {
       const response = await fetch("http://localhost:4200/room", {
@@ -45,7 +40,7 @@ export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ roomName: roomName.trim(), participantName: participantName.trim() }),
+        body: JSON.stringify({ roomName: roomName.trim() }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -53,7 +48,6 @@ export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
         setDisplayRoomCode(data.roomCode);
         setIsSuccess(true);
         setRoomName("");
-        setParticipantName("");
         if (typeof onRoomCreated === "function") {
           onRoomCreated({
             roomName: data.roomName,
@@ -61,8 +55,7 @@ export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
             roomId: data.roomId,
           });
         }
-        // Navigate to lobby with roomName and roomCode
-        router.push(`/lobby?roomName=${encodeURIComponent(data.roomName)}&roomCode=${encodeURIComponent(data.roomCode)}`);
+
       } else {
         setErrorMessage(
           data.message || "Өрөө үүсгэхэд алдаа гарлаа. Дахин оролдоно уу."
@@ -92,19 +85,6 @@ export default function CreateRoomForm({ onRoomCreated }: CreateRoomFormProps) {
             placeholder="Жишээ нь: 'Оройн хоолны өрөө'"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="participantName" className="block text-gray-700 text-sm font-medium mb-2">Таны нэр:</label>
-          <input
-            type="text"
-            id="participantName"
-            name="participantName"
-            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
-            placeholder="Жишээ нь: 'Бат-Эрдэнэ'"
-            value={participantName}
-            onChange={(e) => setParticipantName(e.target.value)}
             disabled={isLoading}
           />
         </div>
