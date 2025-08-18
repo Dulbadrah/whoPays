@@ -22,7 +22,7 @@ export default function RaceGame({ roomId }: { roomId: number }) {
   useEffect(() => {
  const fetchRoom = async () => {
   try {
-    const res = await fetch(`http://localhost:4200/room/get/13`);
+    const res = await fetch(`http://localhost:4200/room/get/15`);
     if (!res.ok) throw new Error("Failed to fetch room");
 
     const data: { room?: RoomData } = await res.json();
