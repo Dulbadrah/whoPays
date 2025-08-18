@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Snail } from "lucide-react";
 
 interface Player {
   id: number;
@@ -20,30 +21,30 @@ export default function RaceGame({ roomId }: { roomId: number }) {
 
   // Backend-аас data авах
   useEffect(() => {
- const fetchRoom = async () => {
-  try {
-    const res = await fetch(`http://localhost:4200/room/get/15`);
-    if (!res.ok) throw new Error("Failed to fetch room");
+    const fetchRoom = async () => {
+      try {
+        const res = await fetch(`http://localhost:4200/room/get/15`);
+        if (!res.ok) throw new Error("Failed to fetch room");
 
-    const data: { room?: RoomData } = await res.json();
+        const data: { room?: RoomData } = await res.json();
 
-    if (!data.room) {
-      console.error("Room data ирсэнгүй");
-      return;
-    }
+        if (!data.room) {
+          console.error("Room data ирсэнгүй");
+          return;
+        }
 
-    const initialPlayers: Player[] = data.room.participants.map((p, index) => ({
-      id: p.id,
-      name: p.name,
-      progress: p.progress || 0,
-      isMe: index === 0, // өөрийнх
-    }));
+        const initialPlayers: Player[] = data.room.participants.map((p, index) => ({
+          id: p.id,
+          name: p.name,
+          progress: p.progress || 0,
+          isMe: index === 0, // өөрийнх
+        }));
 
-    setPlayers(initialPlayers);
-  } catch (err) {
-    console.error("Error fetching room:", err);
-  }
-};
+        setPlayers(initialPlayers);
+      } catch (err) {
+        console.error("Error fetching room:", err);
+      }
+    };
 
     fetchRoom();
   }, [roomId]);
@@ -78,40 +79,49 @@ export default function RaceGame({ roomId }: { roomId: number }) {
 
       <div className="space-y-6">
         {players.map((player) => (
-          <div key={player.id}>
-            <div className="flex justify-between items-center mb-2">
-              <span className={player.isMe ? "font-bold text-blue-600" : ""}>
-                {player.name}
-              </span>
-              {player.isMe && (
-                <Button
-                  onClick={() => handleClick(player.id)}
-                  disabled={!!winner}
-                >
-                  Run!
-                </Button>
-              )}
-            </div>
+          <div key={player.id} className="space-y-2">
+            <div className="flex flex-col">
+              {/* Player name */}
+              <div className="mb-1">
+                <span className={player.isMe ? "font-bold text-blue-600" : ""}>
+                  {player.name}
+                </span>
+              </div>
 
-            <div className="relative h-10 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${player.isMe ? "text-blue-600" : "text-gray-700"
-                  }`}
-                style={{ left: `${player.progress}%` }}
-              >
-                🏃👨‍🦯
+              {/* Progress bar */}
+              <div className="relative h-10 bg-gray-200 rounded-full overflow-hidden">
+                {/* Progress icon */}
+                <div
+                  className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${player.isMe ? "text-blue-600" : "text-gray-700"
+                    }`}
+                  style={{ left: `${player.progress}%` }}
+                >
+                   <Snail />
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Run button below all progress bars */}
+
+
       {winner && (
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-3 mt-4">
           <div className="font-bold text-green-600 text-xl">
             🎉 {winner} is the Winner!
           </div>
           <Button onClick={resetGame}>🔄 Play Again</Button>
+        </div>
+      )}
+
+
+      {!winner && (
+        <div className="text-center mt-4">
+          <Button variant={"destructive"} onClick={() => handleClick(players[0].id)}>
+            Run!
+          </Button>
         </div>
       )}
     </div>
