@@ -86,11 +86,13 @@ export default function JoinRoomForm() {
   };
 
   // lobby руу шилжүүлэх функц
-  const goToLobby = () => {
-    if (displayRoom) {
-      router.push(`/lobby/${displayRoom.id}`); // lobby page руу redirect
-    }
-  };
+ const goToLobby = () => {
+  if (displayRoom && displayParticipant) {
+   
+      
+      
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-blue-100">
