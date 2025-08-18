@@ -1,116 +1,119 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import * as THREE from "three"
-import { useControls } from "./components/useController"
-import { createPlayer } from "./components/players"
-import { createFloor } from "./components/floor"
-import { createObstacle } from "./components/obstacle"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
+interface Player {
+  id: number;
+  name: string;
+  progress: number;
+  isMe: boolean;
+}
 
-export default function RunnerGame() {
-  const mountRef = useRef<HTMLDivElement>(null)
-  const lane = useControls()
-  const obstacles: THREE.Mesh[] = []
-  const [score, setScore] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
+interface RoomData {
+  participants: { id: number; name: string; progress?: number }[];
+}
 
+export default function RaceGame({ roomId }: { roomId: number }) {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [winner, setWinner] = useState<string | null>(null);
+
+  // Backend-аас data авах
   useEffect(() => {
-    if (!mountRef.current) return
+ const fetchRoom = async () => {
+  try {
+    const res = await fetch(`http://localhost:4200/room/get/13`);
+    if (!res.ok) throw new Error("Failed to fetch room");
 
-    // Scene, Camera, Renderer
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    )
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    mountRef.current.appendChild(renderer.domElement)
+    const data: { room?: RoomData } = await res.json();
 
-    // Lights
-    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1)
-    scene.add(light)
-
-    // Player
-    const player = createPlayer()
-    scene.add(player)
-
-    // Floor
-    const floor = createFloor()
-    scene.add(floor)
-
-    camera.position.y = 2
-    camera.position.z = 5
-
-    const laneDistance = 2
-    let lastSpawn = 0
-    let scoreCounter = 0
-
-    function spawnObstacle() {
-      const obs = createObstacle()
-      scene.add(obs)
-      obstacles.push(obs)
+    if (!data.room) {
+      console.error("Room data ирсэнгүй");
+      return;
     }
 
-    function animate(time: number) {
-      if (gameOver) return
-      requestAnimationFrame(animate)
+    const initialPlayers: Player[] = data.room.participants.map((p, index) => ({
+      id: p.id,
+      name: p.name,
+      progress: p.progress || 0,
+      isMe: index === 0, // өөрийнх
+    }));
 
-      // Player lane movement
-      player.position.x += (lane * laneDistance - player.position.x) * 0.2
+    setPlayers(initialPlayers);
+  } catch (err) {
+    console.error("Error fetching room:", err);
+  }
+};
 
-      // Spawn obstacles
-      if (time - lastSpawn > 2000) {
-        spawnObstacle()
-        lastSpawn = time
-      }
+    fetchRoom();
+  }, [roomId]);
 
-      // Move obstacles & check collision
-      for (let obs of obstacles) {
-        obs.position.z += 0.2
-        if (
-          Math.abs(player.position.x - obs.position.x) < 1 &&
-          Math.abs(player.position.z - obs.position.z) < 1
-        ) {
-          setGameOver(true)
-          alert("💀 Game Over! Your Score: " + scoreCounter)
-          return
+  const handleClick = (id: number) => {
+    setPlayers((prev) =>
+      prev.map((p) => {
+        if (p.id === id && !winner) {
+          const newProgress = Math.min(p.progress + 3, 100);
+          if (newProgress >= 100 && !winner) {
+            setWinner(p.name);
+          }
+          return { ...p, progress: newProgress };
         }
-      }
+        return p;
+      })
+    );
+  };
 
-      // Update score
-      scoreCounter += 1
-      if (scoreCounter % 5 === 0) {
-        setScore((prev) => prev + 1) // score UI-г update хийх
-      }
+  const resetGame = () => {
+    setPlayers((prev) =>
+      prev.map((p) => ({ ...p, progress: 0 }))
+    );
+    setWinner(null);
+  };
 
-      renderer.render(scene, camera)
-    }
-    animate(0)
-
-    return () => {
-      mountRef.current?.removeChild(renderer.domElement)
-    }
-  }, [lane, gameOver])
+  if (players.length === 0) return <div>Loading...</div>;
 
   return (
-    <div className="relative w-full h-screen bg-black">
-      <div ref={mountRef} className="absolute inset-0" />
+    <div className="p-4 max-w-2xl mx-auto space-y-6">
+      <h1 className="text-xl font-bold text-center">🏁 Running Race</h1>
 
-      {/* Score UI */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white text-2xl font-bold">
-        Score: {score}
+      <div className="space-y-6">
+        {players.map((player) => (
+          <div key={player.id}>
+            <div className="flex justify-between items-center mb-2">
+              <span className={player.isMe ? "font-bold text-blue-600" : ""}>
+                {player.name}
+              </span>
+              {player.isMe && (
+                <Button
+                  onClick={() => handleClick(player.id)}
+                  disabled={!!winner}
+                >
+                  Run!
+                </Button>
+              )}
+            </div>
+
+            <div className="relative h-10 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${player.isMe ? "text-blue-600" : "text-gray-700"
+                  }`}
+                style={{ left: `${player.progress}%` }}
+              >
+                🏃👨‍🦯
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Game Over UI */}
-      {gameOver && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white text-3xl font-bold">
-          Game Over! Final Score: {score}
+      {winner && (
+        <div className="text-center space-y-3">
+          <div className="font-bold text-green-600 text-xl">
+            🎉 {winner} is the Winner!
+          </div>
+          <Button onClick={resetGame}>🔄 Play Again</Button>
         </div>
       )}
     </div>
-  )
+  );
 }
