@@ -10,6 +10,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { Room } from "../../../../types/type";
+import Link from "next/link";
 // import { Room } from "../types/type";
 // Keep this import as per your provided code
  
@@ -79,6 +80,7 @@ console.log(room);
           for a room that has already been created. */}
 
       <div className="flex items-center justify-between mb-8">
+        <Link href={`/`}>
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium transition-colors bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm"
@@ -86,6 +88,7 @@ console.log(room);
           <ArrowLeft size={20} />
           Leave Room
         </button>
+        </Link>
         <div className="text-center">
           <h1 className="text-3xl font-black text-blue-800 mb-1">
             {room ? room.roomname : "Unknown Room"}

@@ -1,23 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // app router
+// эсвэл next/router ашиглаж болно хэрэв pages router бол
 
-interface RoomDataResponse {
-  room?: {
-    id: number;
-    code: string;
-    roomname: string;
-  };
+interface Participant {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+interface RoomData {
+  id: number;
+  name: string;
+  code: string;
+}
+
+interface JoinResponse {
+  room?: RoomData;
+  participant?: Participant;
   message?: string;
 }
 
 export default function JoinRoomForm() {
+  const router = useRouter(); // router-г авна
+
   const [code, setCode] = useState("");
   const [participantName, setParticipantName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [displayRoomName, setDisplayRoomName] = useState("");
-  const [displayRoomCode, setDisplayRoomCode] = useState("");
+  const [displayRoom, setDisplayRoom] = useState<RoomData | null>(null);
+  const [displayParticipant, setDisplayParticipant] = useState<Participant | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleJoin = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -26,8 +39,7 @@ export default function JoinRoomForm() {
     setIsSuccess(false);
     setErrorMessage("");
 
-    const trimmed = code.trim();
-    if (!/^\d{5}$/.test(trimmed)) {
+    if (!/^\d{5}$/.test(code.trim())) {
       setErrorMessage("5 оронтой кодыг зөв оруулна уу.");
       setIsLoading(false);
       return;
@@ -39,133 +51,118 @@ export default function JoinRoomForm() {
     }
 
     try {
-      const response = await fetch(`http://localhost:4200/room/${trimmed}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch("http://localhost:4200/participant/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomCode: code.trim(),
+          participantName: participantName.trim(),
+        }),
       });
-      
+
+      const data: JoinResponse = await response.json();
+
       if (!response.ok) {
-        if (response.status === 404) {
-          setErrorMessage("Өгөгдсөн кодтой өрөө олдсонгүй.");
-        } else if (response.status === 500) {
-          setErrorMessage("Серверийн алдаа гарлаа. Дараа дахин оролдоно уу.");
-        } else {
-          setErrorMessage(`Алдаа гарлаа (${response.status}). Дахин оролдоно уу.`);
-        }
+        setErrorMessage(data.message || `Алдаа гарлаа (${response.status})`);
         setIsLoading(false);
         return;
       }
 
-      const data: RoomDataResponse = await response.json();
-
-      if (data.room) {
-        setDisplayRoomName(data.room.roomname);
-        setDisplayRoomCode(data.room.code);
+      if (data.room && data.participant) {
+        setDisplayRoom(data.room);
+        setDisplayParticipant(data.participant);
         setIsSuccess(true);
         setCode("");
         setParticipantName("");
       } else {
-        setErrorMessage("Өрөөний мэдээлэл олдсонгүй.");
+        setErrorMessage("Өрөөний мэдээлэл эсвэл participant мэдээлэл олдсонгүй.");
       }
     } catch (err) {
       console.error("Error joining room:", err);
-      setErrorMessage(
-        "Сервертэй холбогдоход алдаа гарлаа. Сервер ажиллаж байгаа эсэхийг шалгана уу."
-      );
+      setErrorMessage("Сервертэй холбогдож чадсангүй. Сервер ажиллаж байгаа эсэхийг шалгана уу.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // lobby руу шилжүүлэх функц
+  const goToLobby = () => {
+    if (displayRoom) {
+      router.push(`/lobby/${displayRoom.id}`); // lobby page руу redirect
+    }
+  };
+
   return (
-    <div
-      className="flex items-center justify-center min-h-screen p-4"
-      style={{
-        fontFamily: "Inter, sans-serif",
-        background: "linear-gradient(to bottom right, #f0f9ff, #e0f2fe)",
-      }}
-    >
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Өрөөнд Нэгдэх
         </h1>
-        <form onSubmit={handleJoin}>
-          <div className="mb-4">
-            <label
-              htmlFor="roomCode"
-              className="block text-gray-700 text-sm font-medium mb-2"
-            >
-              5 оронтой өрөөний код:
-            </label>
-            <input
-              type="text"
-              id="roomCode"
-              name="roomCode"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-              placeholder="Жишээ: 12345"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+
+        {!isSuccess ? (
+          <form onSubmit={handleJoin} className="space-y-4">
+            <div>
+              <label htmlFor="roomCode" className="block text-gray-700 mb-2 font-medium">
+                5 оронтой өрөөний код:
+              </label>
+              <input
+                type="text"
+                id="roomCode"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                placeholder="Жишээ: 12345"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                disabled={isLoading}
+                maxLength={5}
+                inputMode="numeric"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="participantName" className="block text-gray-700 mb-2 font-medium">
+                Таны нэр:
+              </label>
+              <input
+                type="text"
+                id="participantName"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                placeholder="Жишээ: 'Бат-Эрдэнэ'"
+                value={participantName}
+                onChange={(e) => setParticipantName(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
-              maxLength={5}
-              inputMode="numeric"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="participantName"
-              className="block text-gray-700 text-sm font-medium mb-2"
             >
-              Таны нэр:
-            </label>
-            <input
-              type="text"
-              id="participantName"
-              name="participantName"
-              className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
-              placeholder="Жишээ нь: 'Бат-Эрдэнэ'"
-              value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-          <button
-            id="joinRoomBtn"
-            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? "Нэгдэж байна..." : "Өрөөнд Нэгдэх"}
-          </button>
-        </form>
-        {isSuccess && (
-          <div
-            id="result"
-            className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg result-box"
-          >
-            <p className="text-lg font-semibold mb-2">Амжилттай нэгдсэн! 🎉</p>
-            <p className="text-gray-700">
-              Өрөөний нэр:{" "}
-              <span className="font-bold text-blue-700">{displayRoomName}</span>
-            </p>
-            <p className="text-gray-700">
-              Өрөөний код:{" "}
-              <span className="font-bold text-blue-700 text-xl">
-                {displayRoomCode}
-              </span>
-            </p>
+              {isLoading ? "Нэгдэж байна..." : "Өрөөнд Нэгдэх"}
+            </button>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div
+              className="mt-6 bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg text-center animate-pulse"
+            >
+              🎉 Та амжилттай нэгдлээ! <br />
+              Өрөө: <span className="font-bold">{displayRoom?.name}</span> <br />
+              Код: <span className="font-bold">{displayRoom?.code}</span> <br />
+              Таны нэр: <span className="font-bold">{displayParticipant?.name}</span>
+            </div>
+            <button
+              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={goToLobby}
+            >
+              🏠 Lobby руу орох
+            </button>
           </div>
         )}
 
         {errorMessage && (
-          <div
-            id="error"
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative"
-            role="alert"
-          >
-            <strong className="font-bold">Алдаа гарлаа!</strong>
-            <span className="block sm:inline">{errorMessage}</span>
+          <div className="mt-6 bg-red-100 border border-red-400 text-red-700 p-4 rounded-lg">
+            <strong className="font-bold">Алдаа:</strong> {errorMessage}
           </div>
         )}
       </div>
