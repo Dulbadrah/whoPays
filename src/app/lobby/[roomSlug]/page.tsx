@@ -60,7 +60,14 @@ export default function RoomLobbyPage() {
               gameType: GameType.SPIN_WHEEL,
               gamestatus: GameStatus.PENDING,
               results: [],
-              participants: [{ id: 1, name: stored.nickname, roomId: stored.roomId, createdAt: stored.createdAt, results: [], reasons: [] }],
+              participants: [{
+                id: 1,
+                name: stored.nickname,
+                roomId: stored.roomId,
+                createdAt: stored.createdAt,
+                results: [],
+                reasons: []
+              }],
               message: [],
             });
           } else {
@@ -79,7 +86,14 @@ export default function RoomLobbyPage() {
             gameType: GameType.SPIN_WHEEL,
             gamestatus: GameStatus.PENDING,
             results: [],
-            participants: [{ id: 1, name: stored.nickname, roomId: stored.roomId, createdAt: stored.createdAt, results: [], reasons: [] }],
+            participants: [{
+              id: 1,
+              name: stored.nickname,
+              roomId: stored.roomId,
+              createdAt: stored.createdAt,
+              results: [],
+              reasons: []
+            }],
             message: [],
           });
         } else {
@@ -92,7 +106,7 @@ export default function RoomLobbyPage() {
 
     initializeRoom();
 
-    const stopPolling = pollRoomData(slugData.roomCode, setRoom);
+    const stopPolling = pollRoomData(roomCode, setRoom);
     return () => stopPolling();
   }, [roomSlug, searchParams, router]);
 
