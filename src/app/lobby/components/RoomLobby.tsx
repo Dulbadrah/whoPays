@@ -7,6 +7,8 @@ import { Room } from "../../../../types/type";
 import * as roomUtils from "@/utils/roomUtils";
 import { GameButton } from "./GameButton";
 import { PlayerCard } from "./PlayerCard";
+import { useRouter } from "next/navigation";
+
 
 
 interface RoomLobbyProps {
@@ -18,10 +20,11 @@ interface RoomLobbyProps {
 
 export const RoomLobby: React.FC<RoomLobbyProps> = ({
   room,
-  onStartGame,
+  // onStartGame,
   onBack,
   onLeaveRoom,
 }) => {
+    const router = useRouter();
   if (!room) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -29,6 +32,18 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
       </div>
     );
   }
+
+  
+    const handleStartGame = (gameType: string) => {
+
+  if (gameType === "card-draw") {
+    router.push("/excuseSection"); 
+  } else {
+    // бусад тоглоомын route
+    router.push(`/game/${gameType}`);
+  }
+};
+
 
   const players = Array.isArray(room.participants) ? room.participants : [];
   const currentUserNickname = typeof window !== 'undefined' ? localStorage.getItem('userNickname') : null;
@@ -47,6 +62,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
 
   // Leave room handler
   const handleLeaveRoom = async () => {
+    
     if (!currentUserNickname) return;
 
     await roomUtils.removeParticipant(room.code, currentUserNickname);
@@ -56,6 +72,9 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     if (onLeaveRoom) onLeaveRoom();
     else onBack();
   };
+
+
+
 
   // Remove other player
   const handleRemovePlayer = async (playerNickname: string) => {
@@ -69,7 +88,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
   const games = [
     { id: "spin-wheel", name: "Spin the Wheel", icon: require("lucide-react").Target, description: "Classic wheel spinning game", color: "bg-red-400 hover:bg-red-500 border-red-600", textColor: "text-red-900" },
     { id: "dice-roll", name: "Lucky Dice", icon: require("lucide-react").Dice6, description: "Roll the dice to decide", color: "bg-green-400 hover:bg-green-500 border-green-600", textColor: "text-green-900" },
-    { id: "card-draw", name: "Draw Cards", icon: require("lucide-react").Trophy, description: "Pick the unlucky card", color: "bg-purple-400 hover:bg-purple-500 border-purple-600", textColor: "text-purple-900" },
+    { id: "card-draw", name: "Шалтагаа тооч", icon: require("lucide-react").Trophy, description: "Өнөөдрийн тооцооноос хэн мултрахаа үзэх үү?", color: "bg-purple-400 hover:bg-purple-500 border-purple-600", textColor: "text-purple-900" },
     { id: "number-guess", name: "Number Game", icon: require("lucide-react").Gamepad2, description: "Guess the magic number", color: "bg-orange-400 hover:bg-orange-500 border-orange-600", textColor: "text-orange-900" },
   ];
 
@@ -147,7 +166,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
             <GameButton
               key={game.id}
               game={game}
-              onStart={onStartGame}
+                onStart={handleStartGame}
               isHost={isCurrentUserHost}
               canStart={players.length >= 2}
             />

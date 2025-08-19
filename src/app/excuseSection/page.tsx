@@ -5,8 +5,8 @@ import { useState, type FormEvent, type ChangeEvent } from "react";
 import { ExcuseHeader } from "./components/ExcuseHeader";
 import { AnimatedDotAll } from "@/components/ui/AnimatedDot";
 import { ExcuseBackground } from "./components/ExcuseBackground";
-import { ExcuseForm } from "./components/Excusetest";
-// import { ExcuseForm } from "./components/ExcuseForm"
+import { ExcuseForm } from "./components/ExcuseForm";
+
 
 const ExcuseSection: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -17,7 +17,7 @@ const ExcuseSection: React.FC = () => {
       <div className="relative z-10 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 max-w-xs sm:max-w-md w-full border border-white/20">
         <ExcuseHeader />
         <h2 className="text-lg sm:text-xl font-bold text-center mb-4 sm:mb-6 text-gray-700 drop-shadow-sm">
-          Шалтаг аа бич
+          Шалтаг аа бич📝
         </h2>
 
         {submitted ? (
@@ -28,7 +28,7 @@ const ExcuseSection: React.FC = () => {
             <p className="text-gray-600">Thank you for your submission.</p>
           </div>
         ) : (
-          // <ExcuseForm/>
+    
           <ExcuseForm />
         )}
 

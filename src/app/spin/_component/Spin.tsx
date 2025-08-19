@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { ExcuseBackground } from '@/app/excuseSection/components/ExcuseBackground';
  
 const Wheel = dynamic(() => import('react-custom-roulette').then(mod => mod.Wheel), { ssr: false });
  
@@ -37,7 +38,9 @@ const Spin: React.FC = () => {
   };
  
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gradient-to-b from-blue-400 to-blue-600 font-sans">
+    <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-gradient-to-b from-blue-400  via-blue-500 to-blue-600 font-sans">
+
+            <ExcuseBackground/>
       <h1 className="mb-8 text-3xl font-bold text-white">Spin the Wheel 🎉</h1>
  
       <div className="bg-white p-6 rounded-xl shadow-md max-w-md w-full text-center">

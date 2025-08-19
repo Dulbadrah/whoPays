@@ -49,7 +49,7 @@ export const JoinFormInputs: React.FC<JoinFormInputsProps> = ({ code, setCode, n
     <button
       type="submit"
       disabled={isLoading}
-      className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full py-2 px-4 bg-green-400 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {isLoading ? "Нэгдэж байна..." : "Өрөөнд Нэгдэх"}
     </button>

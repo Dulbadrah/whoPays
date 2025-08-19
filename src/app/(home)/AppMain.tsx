@@ -8,6 +8,7 @@ import { Plus, Users } from "lucide-react";
 import BackgroundDot from "./components/BackgroundDot";
 import ActionButton from "./components/ActionButton";
 import AnimatedDot from "./components/AnimatedDot";
+import { Header } from "@/components/Header";
 
 const AppMain: React.FC = () => {
   const router = useRouter();
@@ -38,16 +39,8 @@ const AppMain: React.FC = () => {
 
       {/* Main content */}
       <div className="relative z-10 text-center max-w-xs sm:max-w-md lg:max-w-lg w-full">
-        {/* Header */}
-        <div className="mb-8 sm:mb-12">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
-            WHO
-          </h1>
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-yellow-300 mb-2 drop-shadow-2xl transform rotate-1">
-            PAYS?
-          </h1>
-          <div className="w-16 sm:w-24 lg:w-32 h-1.5 sm:h-2 bg-red-500 mx-auto rounded-full shadow-lg"></div>
-        </div>
+    
+        <Header/>
 
         {/* Buttons */}
         <div className="space-y-4 sm:space-y-6">
