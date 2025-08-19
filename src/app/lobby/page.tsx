@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import RoomLobby from "../lobby/components/Lobby";
+import RoomLobby from "./components/RoomLobby";
 import { GameType, GameStatus, Room } from "../../../types/type";
 
 export default function LobbyPage() {
@@ -44,7 +44,7 @@ export default function LobbyPage() {
         code: finalRoomCode,
         roomname: finalRoomName,
         createdAt: new Date().toISOString(),
-        gameType: GameType.SPIN_WHELL,
+        gameType: GameType.SPIN_WHEEL,
         gamestatus: GameStatus.PENDING,
         results: [],
         participants: [{
@@ -78,7 +78,7 @@ export default function LobbyPage() {
             code: parsed.roomCode,
             roomname: parsed.roomName,
             createdAt: parsed.createdAt || new Date().toISOString(),
-            gameType: GameType.SPIN_WHELL,
+            gameType: GameType.SPIN_WHEEL,
             gamestatus: GameStatus.PENDING,
             results: [],
             participants: [{

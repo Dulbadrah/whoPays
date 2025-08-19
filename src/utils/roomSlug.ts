@@ -1,16 +1,9 @@
 // Utility functions for handling room slugs that combine room name and code
 
 export function createRoomSlug(roomName: string, roomCode: string): string {
-  // Handle undefined or null roomName
-  if (!roomName || typeof roomName !== 'string') {
-    console.warn('Invalid room name provided to createRoomSlug:', roomName);
-    roomName = 'unnamed-room';
-  }
-
-  // Handle undefined or null roomCode
-  if (!roomCode || typeof roomCode !== 'string') {
-    console.warn('Invalid room code provided to createRoomSlug:', roomCode);
-    roomCode = '00000';
+  // Validate inputs
+  if (!roomCode || !/^\d{5}$/.test(roomCode)) {
+    throw new Error('Room code must be exactly 5 digits');
   }
 
   // Clean room name: remove special characters, convert to lowercase, replace spaces with hyphens
@@ -22,37 +15,32 @@ export function createRoomSlug(roomName: string, roomCode: string): string {
     .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
     .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
 
-  return `${cleanRoomName}-${roomCode}`;
+  // If cleaning resulted in empty string, use default name
+  const finalRoomName = cleanRoomName || 'room';
+
+  return `${finalRoomName}-${roomCode}`;
 }
 
 export function parseRoomSlug(slug: string): { roomName: string; roomCode: string } | null {
-  if (!slug || typeof slug !== 'string') {
-    console.warn('Invalid slug provided to parseRoomSlug:', slug);
-    return null;
-  }
+  if (!slug || typeof slug !== 'string') return null;
+
+  // Trim the slug
+  slug = slug.trim();
+  if (!slug) return null;
 
   // Split by hyphen and get the last part as room code (assuming it's 5 digits)
-  const parts = slug.split('-');
-  if (parts.length < 2) {
-    console.warn('Slug does not contain enough parts:', slug);
-    return null;
-  }
+  const parts = slug.split('-').filter(part => part.length > 0); // Filter out empty parts
+  if (parts.length < 2) return null;
 
   // Find the room code (5 digits) - it should be at the end
   const roomCode = parts[parts.length - 1];
-  if (!/^\d{5}$/.test(roomCode)) {
-    console.warn('Invalid room code format in slug:', roomCode);
-    return null;
-  }
+  if (!/^\d{5}$/.test(roomCode)) return null;
 
   // Everything else is the room name
   const roomNameParts = parts.slice(0, -1);
-  let roomName = roomNameParts.join(' ');
+  if (roomNameParts.length === 0) return null;
   
-  // Handle empty room name
-  if (!roomName || roomName.trim() === '') {
-    roomName = 'unnamed room';
-  }
+  const roomName = roomNameParts.join(' ');
 
   return {
     roomName: roomName.charAt(0).toUpperCase() + roomName.slice(1), // Capitalize first letter
