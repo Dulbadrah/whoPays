@@ -63,11 +63,8 @@ export const ExcuseForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          Шалтгаан бичих 📝
-        </h2>
+    <div className=" flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md h-auto max-h-[90vh] overflow-auto">
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
             className="w-full p-3 border rounded-xl resize-none h-24"
@@ -89,7 +86,7 @@ export const ExcuseForm = () => {
 
         {showRoastModal && roastResult && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center">
+            <div className="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center h-auto max-h-[80vh] overflow-auto">
               <h3 className="text-xl font-bold mb-2">🎉 AI Roast 🎉</h3>
               <p className="italic text-gray-700 mb-4">
                 "{roastResult.roastMessage}"
