@@ -89,7 +89,7 @@ export default function JoinRoomForm() {
  const goToLobby = () => {
   if (displayRoom && displayParticipant) {
    
-      
+    router.push(`/lobby?roomName=${encodeURIComponent(displayRoom.name)}&roomCode=${encodeURIComponent(displayRoom.code)}&participantName=${encodeURIComponent(displayParticipant.name)}`);
       
   }
 };

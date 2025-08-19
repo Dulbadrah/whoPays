@@ -53,7 +53,7 @@ export default function RaceGame({ roomId }: { roomId: number }) {
     setPlayers((prev) =>
       prev.map((p) => {
         if (p.id === id && !winner) {
-          const newProgress = Math.min(p.progress + 3, 100);
+          const newProgress = Math.min(p.progress + 1, 100);
           if (newProgress >= 100 && !winner) {
             setWinner(p.name);
           }
