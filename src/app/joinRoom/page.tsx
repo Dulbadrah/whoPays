@@ -1,8 +1,4 @@
-import JoinRoomForm from "./component/JoinRoom";
-
-
-
-
+import JoinRoomForm from "./components/RoomJoinForm";
 
 export default function room() {
   return <JoinRoomForm/>;

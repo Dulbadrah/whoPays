@@ -1,7 +1,11 @@
-import AppMain from "./home/componont/  AppMain";
+"use client";
 
+import AppMain from "./(home)/AppMain";
 
-
-export default function HomePage() {
-  return <AppMain />;
+export default function homePage() {
+  return (
+    <div>
+        <AppMain/>
+    </div>
+  )
 }
