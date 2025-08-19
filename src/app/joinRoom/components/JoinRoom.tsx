@@ -30,7 +30,8 @@ export default function JoinRoomForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [displayRoom, setDisplayRoom] = useState<RoomData | null>(null);
-  const [displayParticipant, setDisplayParticipant] = useState<Participant | null>(null);
+  const [displayParticipant, setDisplayParticipant] =
+    useState<Participant | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleJoin = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -75,24 +76,32 @@ export default function JoinRoomForm() {
         setCode("");
         setParticipantName("");
       } else {
-        setErrorMessage("Өрөөний мэдээлэл эсвэл participant мэдээлэл олдсонгүй.");
+        setErrorMessage(
+          "Өрөөний мэдээлэл эсвэл participant мэдээлэл олдсонгүй."
+        );
       }
     } catch (err) {
       console.error("Error joining room:", err);
-      setErrorMessage("Сервертэй холбогдож чадсангүй. Сервер ажиллаж байгаа эсэхийг шалгана уу.");
+      setErrorMessage(
+        "Сервертэй холбогдож чадсангүй. Сервер ажиллаж байгаа эсэхийг шалгана уу."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   // lobby руу шилжүүлэх функц
- const goToLobby = () => {
-  if (displayRoom && displayParticipant) {
-   
-    router.push(`/lobby?roomName=${encodeURIComponent(displayRoom.name)}&roomCode=${encodeURIComponent(displayRoom.code)}&participantName=${encodeURIComponent(displayParticipant.name)}`);
-      
-  }
-};
+  const goToLobby = () => {
+    if (displayRoom && displayParticipant) {
+      router.push(
+        `/lobby?roomName=${encodeURIComponent(
+          displayRoom.name
+        )}&roomCode=${encodeURIComponent(
+          displayRoom.code
+        )}&participantName=${encodeURIComponent(displayParticipant.name)}`
+      );
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-blue-100">
@@ -104,7 +113,10 @@ export default function JoinRoomForm() {
         {!isSuccess ? (
           <form onSubmit={handleJoin} className="space-y-4">
             <div>
-              <label htmlFor="roomCode" className="block text-gray-700 mb-2 font-medium">
+              <label
+                htmlFor="roomCode"
+                className="block text-gray-700 mb-2 font-medium"
+              >
                 5 оронтой өрөөний код:
               </label>
               <input
@@ -121,7 +133,10 @@ export default function JoinRoomForm() {
             </div>
 
             <div>
-              <label htmlFor="participantName" className="block text-gray-700 mb-2 font-medium">
+              <label
+                htmlFor="participantName"
+                className="block text-gray-700 mb-2 font-medium"
+              >
                 Таны нэр:
               </label>
               <input
@@ -145,13 +160,13 @@ export default function JoinRoomForm() {
           </form>
         ) : (
           <div className="space-y-4">
-            <div
-              className="mt-6 bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg text-center animate-pulse"
-            >
+            <div className="mt-6 bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg text-center animate-pulse">
               🎉 Та амжилттай нэгдлээ! <br />
-              Өрөө: <span className="font-bold">{displayRoom?.name}</span> <br />
+              Өрөө: <span className="font-bold">{displayRoom?.name}</span>{" "}
+              <br />
               Код: <span className="font-bold">{displayRoom?.code}</span> <br />
-              Таны нэр: <span className="font-bold">{displayParticipant?.name}</span>
+              Таны нэр:{" "}
+              <span className="font-bold">{displayParticipant?.name}</span>
             </div>
             <button
               className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
