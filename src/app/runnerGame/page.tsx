@@ -94,7 +94,7 @@ export default function RaceGame({ roomId }: { roomId: number }) {
                 <div
                   className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${player.isMe ? "text-blue-600" : "text-gray-700"
                     }`}
-                  style={{ left: `${player.progress}%` }}
+                  style={{ inset-inline-start: `${player.progress}%` }}
                 >
                    <Snail />
                 </div>
