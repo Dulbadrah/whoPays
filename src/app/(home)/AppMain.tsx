@@ -1,15 +1,13 @@
 "use client";
 
 import React from "react";
-import { Plus, Users } from "lucide-react";
-
-import AnimatedDot from "./AnimatedDot";
 
 import { useRouter } from "next/navigation"; 
-import BackgroundDot from "./ BackgroundDot";
-import ActionButton from "./ ActionButton";
-import Link from "next/link";
+import { Plus, Users } from "lucide-react";
 
+import BackgroundDot from "./components/BackgroundDot";
+import ActionButton from "./components/ActionButton";
+import AnimatedDot from "./components/AnimatedDot";
 
 const AppMain: React.FC = () => {
   const router = useRouter();

@@ -1,8 +1,7 @@
-import CreateRoomForm from "./componont/createRoom";
+"use client";
 
-
-
+import CreateRoom from "./component/CreateRoom";
 
 export default function room() {
-  return <CreateRoomForm/>;
+  return <CreateRoom />;
 }
