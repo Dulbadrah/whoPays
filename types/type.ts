@@ -1,6 +1,6 @@
 // Enums
 export enum GameType {
-  SPIN_WHELL = "SPIN_WHELL",
+  SPIN_WHEEL = "SPIN_WHEEL",
   AI_ROAST = "AI_ROAST",
 }
 
