@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createRoomSlug } from "../../../utils/roomSlug";
 import { checkRoomNameUnique, createRoom } from "../../../utils/roomApi";
 import { CreateFormInputs } from "./CreateFormInput";
+import { ExcuseBackground } from "@/app/excuseSection/components/ExcuseBackground";
 
 interface CreateRoomFormProps {
   onRoomCreated?: (room: { roomName: string; roomCode: string; roomId: number }) => void;
@@ -103,15 +104,21 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen p-4"
-      style={{ fontFamily: "Inter, sans-serif", background: "linear-gradient(to bottom right, #f0f9ff, #e0f2fe)" }}
-    >
+  <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+    <ExcuseBackground/>
       <form
         className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg"
         onSubmit={handleCreateRoom}
       >
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Өрөө Үүсгэх</h1>
+      
+          <div className="items-center text-center mb-8">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-green-300 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
+           Өрөө
+          </h1>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-yellow-400 mb-2 drop-shadow-2xl transform rotate-1">
+           Үүсгэх
+          </h1>
+          </div>
 
         {/* Input fields modular */}
         <CreateFormInputs

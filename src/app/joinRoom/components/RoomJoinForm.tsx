@@ -9,6 +9,7 @@ import {
   addParticipantToRoom,
 } from "../../../utils/roomApi";
 import { JoinFormInputs } from "./JoinFormInputs";
+import { ExcuseBackground } from "@/app/excuseSection/components/ExcuseBackground";
 
 export default function JoinRoomForm() {
   const [code, setCode] = useState("");
@@ -114,13 +115,18 @@ export default function JoinRoomForm() {
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen p-4"
-      style={{ fontFamily: "Inter, sans-serif", background: "linear-gradient(to bottom right, #f0f9ff, #e0f2fe)" }}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+      <ExcuseBackground/>
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Өрөөнд Нэгдэх</h1>
-
+    
+    <div className="items-center text-center mb-8">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-blue-400 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
+          Өрөөнд
+          </h1>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-green-400 mb-2 drop-shadow-2xl transform rotate-1">
+         Нэгдэх
+          </h1>
+          </div>
         {/* Input form component */}
         <JoinFormInputs
           code={code}
