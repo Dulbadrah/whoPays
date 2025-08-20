@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createRoomSlug } from "../../../utils/roomSlug";
 import { checkRoomNameUnique, createRoom } from "../../../utils/roomApi";
 import { CreateFormInputs } from "./CreateFormInput";
-import { ExcuseBackground } from "@/app/excuseSection/components/ExcuseBackground";
+import { ExcuseBackground } from "@/app/(game)/excuseSection/components/ExcuseBackground";
 
 interface CreateRoomFormProps {
   onRoomCreated?: (room: { roomName: string; roomCode: string; roomId: number }) => void;

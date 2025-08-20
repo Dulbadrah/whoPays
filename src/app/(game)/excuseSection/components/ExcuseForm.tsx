@@ -15,15 +15,19 @@ export const ExcuseForm = () => {
   const params = useParams();
   const searchParams = useSearchParams();
 
+
+
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setReason(e.target.value);
   };
 
-  const roomCode = params.roomCode as string;
+
+
+  const roomCode = searchParams.get('roomCode') as string;
 
   useEffect(() => {
     if (roomCode) {
-      console.log("Room Code from URL:", roomCode);
+      // console.log("Room Code from URL:", roomCode);
     }
   }, [roomCode]);
 
@@ -36,13 +40,14 @@ export const ExcuseForm = () => {
     setStatusMessage(null);
 
     try {
-      const response = await fetch("http://localhost:4200/roast", {
+      const response = await fetch(`http://localhost:4200/roast`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          roomId: roomCode,
+          code: roomCode,
+    
           reasons: [reason],
         }),
       });
@@ -53,7 +58,7 @@ export const ExcuseForm = () => {
         throw new Error(data.message || "Roast авахад алдаа гарлаа");
       }
 
-      console.log("🔥 Roast API response:", data);
+      // console.log("🔥 Roast API response:", data);
 
       setIsSubmitted(true);
       setReason("");
