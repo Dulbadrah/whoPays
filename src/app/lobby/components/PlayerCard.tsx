@@ -1,15 +1,10 @@
 "use client";
 
 import React from "react";
-import { X } from "lucide-react";
 
-interface PlayerCardProps {
-  player: any;
-  isCurrentUser: boolean;
-  isHost: boolean;
-  isCurrentUserHost: boolean;
-  onRemove?: (nickname: string) => void;
-}
+import { X } from "lucide-react";
+import { PlayerCardProps } from "../../../../types/type";
+
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
@@ -20,7 +15,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg border-3 ${
+      className={`bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-lg border-2 w-full sm:w-44 ${
         isCurrentUser 
           ? 'border-blue-400 bg-blue-50/80' 
           : isHost
@@ -28,7 +23,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
             : 'border-white/50'
       } text-center transform hover:scale-105 transition-all duration-200 relative`}
     >
-      {isCurrentUserHost && !isHost && !isCurrentUser && (
+        <div className=""> 
+       {isCurrentUserHost && !isHost && !isCurrentUser && (
         <button
           onClick={() => onRemove && onRemove(player.name)}
           className="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
@@ -38,7 +34,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         </button>
       )}
 
-      <div className={`w-12 h-12 bg-gradient-to-br ${
+      <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${
         isHost 
           ? 'from-yellow-300 to-yellow-400' 
           : isCurrentUser
@@ -53,8 +49,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
       } shadow-inner`}>
         {player.name.charAt(0).toUpperCase()}
       </div>
+        </div>
+    
 
-      <p className="font-bold text-blue-800 text-lg">{player.name}</p>
+      <p className="font-bold  text-blue-800 text-lg">{player.name}</p>
 
       <div className="flex flex-col gap-1 mt-2">
         {isHost && (

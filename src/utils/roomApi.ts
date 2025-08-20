@@ -86,7 +86,7 @@ export const fetchRoomData = async (roomCode: string) => {
   }
 };
 
-export const pollRoomData = (roomCode: string, callback: (room: any) => void, interval = 3000) => {
+export const pollRoomData = (roomCode: string, callback: (room: any) => void, ) => {
   const id = setInterval(async () => {
     try {
       const data = await fetchRoomData(roomCode);
@@ -94,7 +94,7 @@ export const pollRoomData = (roomCode: string, callback: (room: any) => void, in
     } catch (e) {
       console.error("Polling error:", e);
     }
-  }, interval);
+  } );
 
   return () => clearInterval(id);
 };
