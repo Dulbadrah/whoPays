@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { useRoom } from "@/context/roomContext";
 import { GameButtonProps } from "@/app/types/type";
 
-export const GameButton: React.FC<GameButtonProps> = ({    game, isHost, canStart }) => {
+export const GameButton: React.FC<GameButtonProps> = ({  game, isHost, canStart }) => {
   const router = useRouter();
   const { room } = useRoom();
   const IconComponent = game.icon;
 
   const handleStart = () => {
-        if (!isHost || !canStart) return; 
+        // if (!isHost || !canStart) return; 
 
     const map: Record<string, string> = {
       "spin-wheel": "/spin",

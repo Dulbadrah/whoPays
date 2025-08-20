@@ -96,12 +96,6 @@ export default function RoomLobbyPage() {
     return () => stopPolling();
   }, [roomSlug, searchParams, router]);
 
-  const handleStartGame = (gameType: string) => {
-    const slugData = parseRoomSlug(roomSlug);
-    console.log(`Starting ${gameType} in room:`, slugData?.roomCode);
-    // TODO: Implement game logic
-  };
-
   const handleBack = () => {
     localStorage.removeItem("currentRoom");
     router.push("/");

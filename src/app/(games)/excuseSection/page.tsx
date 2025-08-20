@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { ExcuseHeader } from "./components/ExcuseHeader";
 import { AnimatedDotAll } from "@/components/ui/AnimatedDot";
 import { ExcuseBackground } from "./components/ExcuseBackground";
-import { ExcuseForm } from "./components/Excusetest";
+import { ExcuseForm } from "./components/ExcuseForm";
 // import { ExcuseForm } from "./components/ExcuseForm"
 
 const ExcuseSection: React.FC = () => {
@@ -41,8 +41,7 @@ const ExcuseSection: React.FC = () => {
             <p className="text-gray-600">Thank you for your submission.</p>
           </div>
         ) : (
-          // <ExcuseForm/>
-          <ExcuseForm roomId={roomId} roomName={roomName} userNickname={userNickname} />
+          <ExcuseForm  />
         )}
 
         <AnimatedDotAll />

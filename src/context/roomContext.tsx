@@ -20,7 +20,6 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // 🔹 room өөрчлөгдөх бүрт localStorage-д хадгалах
   useEffect(() => {
     if (room) {
       localStorage.setItem("currentRoom", JSON.stringify(room));
