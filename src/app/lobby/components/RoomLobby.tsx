@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Users, LogOut, X } from "lucide-react";
+import { ArrowLeft, Users, LogOut } from "lucide-react";
 import { Room } from "../../../../types/type";
 
 import * as roomUtils from "@/utils/roomUtils";

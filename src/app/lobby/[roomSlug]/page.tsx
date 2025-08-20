@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import RoomLobby from "../components/RoomLobby";
 import { GameType, GameStatus, Room } from "../../../../types/type";
 import { parseRoomSlug, isValidRoomSlug } from "../../../utils/roomSlug";
-import { fetchRoomData, pollRoomData } from "../../../utils/roomApi";
+import roomApi from "../../../utils/roomApi";
 import { getNickname, getStoredRoomData, storeRoomData } from "@/utils/localStorageHelper";
 
 export default function RoomLobbyPage() {
@@ -39,7 +39,7 @@ export default function RoomLobbyPage() {
 
     const initializeRoom = async () => {
       try {
-        const data = await fetchRoomData(roomCode);
+        const data = await roomApi.fetchRoomData(roomCode);
         if (data?.room) {
           setRoom(data.room);
           storeRoomData({
@@ -60,14 +60,7 @@ export default function RoomLobbyPage() {
               gameType: GameType.SPIN_WHEEL,
               gamestatus: GameStatus.PENDING,
               results: [],
-              participants: [{
-                id: 1,
-                name: stored.nickname,
-                roomId: stored.roomId,
-                createdAt: stored.createdAt,
-                results: [],
-                reasons: []
-              }],
+              participants: [{ id: 1, name: stored.nickname, roomId: stored.roomId, createdAt: stored.createdAt, results: [], reasons: [] }],
               message: [],
             });
           } else {
@@ -86,14 +79,7 @@ export default function RoomLobbyPage() {
             gameType: GameType.SPIN_WHEEL,
             gamestatus: GameStatus.PENDING,
             results: [],
-            participants: [{
-              id: 1,
-              name: stored.nickname,
-              roomId: stored.roomId,
-              createdAt: stored.createdAt,
-              results: [],
-              reasons: []
-            }],
+            participants: [{ id: 1, name: stored.nickname, roomId: stored.roomId, createdAt: stored.createdAt, results: [], reasons: [] }],
             message: [],
           });
         } else {
@@ -106,7 +92,7 @@ export default function RoomLobbyPage() {
 
     initializeRoom();
 
-    const stopPolling = pollRoomData(roomCode, setRoom);
+    const stopPolling = roomApi.pollRoomData(slugData.roomCode, setRoom);
     return () => stopPolling();
   }, [roomSlug, searchParams, router]);
 
