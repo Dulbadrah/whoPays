@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import RoomLobby from "./components/RoomLobby";
-import { GameType, GameStatus, Room } from "../../../types/type";
+import { GameType, GameStatus, Room } from "../types/type";
 
 export default function LobbyPage() {
   const searchParams = useSearchParams();
@@ -17,6 +17,7 @@ export default function LobbyPage() {
 
     // Get stored data as fallback
     const storedRoomData = localStorage.getItem('currentRoom');
+    const storedRoomCode = localStorage.getItem('roomCode')
     const storedNickname = localStorage.getItem('userNickname');
 
     let finalRoomName = roomNameFromURL;
@@ -59,7 +60,7 @@ export default function LobbyPage() {
       };
       setRoom(roomData);
       
-      // Store in localStorage for persistence
+      // Store in localStorage 
       localStorage.setItem('currentRoom', JSON.stringify({
         roomName: finalRoomName,
         roomCode: finalRoomCode,
@@ -69,7 +70,7 @@ export default function LobbyPage() {
       }));
       localStorage.setItem('userNickname', finalNickname);
     } else {
-      // Fallback: try to get from localStorage completely
+      // Fallback: try to get from localStorage complete
       if (storedRoomData && storedNickname) {
         try {
           const parsed = JSON.parse(storedRoomData);
@@ -94,19 +95,42 @@ export default function LobbyPage() {
           setRoom(roomData);
         } catch (error) {
           console.error('Error parsing stored room data:', error);
-          // Redirect to home or create room if no valid data
+          //* Redirect to home or create room if no valid data
           router.push('/createRoom');
         }
       } else {
-        // No room data available, redirect to create room
+        //* No room data available, redirect to create room
         router.push('/createRoom');
       }
     }
   }, [searchParams, router]);
 
   const handleStartGame = (gameType: string) => {
-    // TODO: Implement game start logic
-    console.log('Starting game:', gameType);
+    //* Navigate to the selected game inside the (games) route group.
+    const map: Record<string, string> = {
+      "spin-wheel": "/spin",
+      "Lets-run": "/runnerGame",
+      "Excuse-section": "/excuseSection",
+      "tic-tac-toe": "/tic-tac-toe",
+    };
+
+    const target = map[gameType] || (gameType.startsWith("/") ? gameType : `/${gameType}`);
+
+    try {
+      if (!room) {
+        console.warn('No room available, navigating without room params');
+        router.push(target);
+        return;
+      }
+      const roomName = encodeURIComponent(room.roomname || "");
+      const roomCode = encodeURIComponent(room.code || "");
+      const nickname = encodeURIComponent(localStorage.getItem("userNickname") || "");
+
+      const url = `${target}?roomName=${roomName}&roomCode=${roomCode}&nickname=${nickname}`;
+      router.push(url);
+    } catch (err) {
+      console.error("Failed to navigate to game:", err);
+    }
   };
 
   const handleBack = () => {

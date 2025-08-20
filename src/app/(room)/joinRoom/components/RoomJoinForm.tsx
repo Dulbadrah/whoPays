@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createRoomSlug } from "../../../utils/roomSlug";
-import {
-  checkRoomExists,
-  checkNicknameAvailable,
-  addParticipantToRoom,
-} from "../../../utils/roomApi";
+
 import { JoinFormInputs } from "./JoinFormInputs";
+import { createRoomSlug } from "@/utils/roomSlug";
+import { addParticipantToRoom, checkNicknameAvailable, checkRoomExists } from "@/utils/roomApi";
 
 export default function JoinRoomForm() {
   const [code, setCode] = useState("");

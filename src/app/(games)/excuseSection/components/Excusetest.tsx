@@ -4,7 +4,13 @@ interface RoastResult {
   roastMessage: string;
 }
 
-export const ExcuseForm = () => {
+interface ExcuseFormProps {
+  roomId?: string;
+  roomName?: string;
+  userNickname?: string;
+}
+
+export const ExcuseForm: React.FC<ExcuseFormProps> = ({ roomId = "", roomName = "", userNickname = "" }) => {
   const [reason, setReason] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -26,11 +32,21 @@ export const ExcuseForm = () => {
 
     try {
       // 1️⃣ Participant өөрийн reason-ийг POST хийнэ
-      const participantId = 1; // Жишээ participantId
+      // include room and user information so the server can associate the reason
+      const payload: any = {
+        participantId: userNickname || 1,
+        reasons: [reason],
+        meta: {
+          roomId,
+          roomName,
+          userNickname,
+        },
+      };
+
       const response = await fetch(API_REASON_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ participantId, reasons: [reason] }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

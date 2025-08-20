@@ -1,4 +1,4 @@
-import AnimatedDot from "@/app/components/AnimatedDot"
+import AnimatedDot from "@/app/(home)/components/AnimatedDot"
 
 export const AnimatedDotAll = ()=> {
     return (

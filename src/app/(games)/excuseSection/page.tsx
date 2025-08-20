@@ -1,7 +1,7 @@
 "use client";
 
-import type React from "react";
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { ExcuseHeader } from "./components/ExcuseHeader";
 import { AnimatedDotAll } from "@/components/ui/AnimatedDot";
 import { ExcuseBackground } from "./components/ExcuseBackground";
@@ -10,6 +10,19 @@ import { ExcuseForm } from "./components/Excusetest";
 
 const ExcuseSection: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [roomName, setRoomName] = useState<string>("");
+  const [roomId, setRoomId] = useState<string>("");
+  const [userNickname, setUserNickname] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const rn = localStorage.getItem("roomName") || localStorage.getItem("roomname") || "";
+    const rid = localStorage.getItem("roomId") || localStorage.getItem("roomid") || "";
+    const un = localStorage.getItem("userNickname") || localStorage.getItem("usernickname") || "";
+    setRoomName(rn);
+    setRoomId(rid);
+    setUserNickname(un);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
@@ -29,7 +42,7 @@ const ExcuseSection: React.FC = () => {
           </div>
         ) : (
           // <ExcuseForm/>
-          <ExcuseForm />
+          <ExcuseForm roomId={roomId} roomName={roomName} userNickname={userNickname} />
         )}
 
         <AnimatedDotAll />

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ArrowLeft, Users, LogOut } from "lucide-react";
-import { Room } from "../../../../types/type";
+import { Room } from "../../types/type";
 
 import * as roomUtils from "@/utils/roomUtils";
 import { GameButton } from "./GameButton";
@@ -33,7 +33,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
   const players = Array.isArray(room.participants) ? room.participants : [];
   const currentUserNickname = typeof window !== 'undefined' ? localStorage.getItem('userNickname') : null;
 
-  // Current user is host
+  //* Current user is host
   let isCurrentUserHost = false;
   try {
     const currentRoomData = typeof window !== 'undefined' ? localStorage.getItem('currentRoom') : null;
@@ -45,7 +45,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     console.error('Error parsing room data:', error);
   }
 
-  // Leave room handler
+  //* Leave room handler
   const handleLeaveRoom = async () => {
     if (!currentUserNickname) return;
 
@@ -57,7 +57,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     else onBack();
   };
 
-  // Remove other player
+  //* Remove other player
   const handleRemovePlayer = async (playerNickname: string) => {
     if (!isCurrentUserHost || playerNickname === currentUserNickname) return;
 
@@ -65,12 +65,12 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     if (success) window.location.reload();
   };
 
-  // Games
+  //* Games
   const games = [
     { id: "spin-wheel", name: "Spin the Wheel", icon: require("lucide-react").Target, description: "Classic wheel spinning game", color: "bg-red-400 hover:bg-red-500 border-red-600", textColor: "text-red-900" },
-    { id: "dice-roll", name: "Lucky Dice", icon: require("lucide-react").Dice6, description: "Roll the dice to decide", color: "bg-green-400 hover:bg-green-500 border-green-600", textColor: "text-green-900" },
-    { id: "card-draw", name: "Draw Cards", icon: require("lucide-react").Trophy, description: "Pick the unlucky card", color: "bg-purple-400 hover:bg-purple-500 border-purple-600", textColor: "text-purple-900" },
-    { id: "number-guess", name: "Number Game", icon: require("lucide-react").Gamepad2, description: "Guess the magic number", color: "bg-orange-400 hover:bg-orange-500 border-orange-600", textColor: "text-orange-900" },
+    { id: "Lets-run", name: "Lets Run", icon: require("lucide-react").Dice6, description: "Lets run with one button", color: "bg-green-400 hover:bg-green-500 border-green-600", textColor: "text-green-900" },
+    { id: "Excuse-section", name: "Excuse Section", icon: require("lucide-react").Trophy, description: "Excuse and fun", color: "bg-purple-400 hover:bg-purple-500 border-purple-600", textColor: "text-purple-900" },
+    { id: "tic-tac-toe", name: "Tic Tac Toe", icon: require("lucide-react").Gamepad2, description: "Tic Tac Toe", color: "bg-orange-400 hover:bg-orange-500 border-orange-600", textColor: "text-orange-900" },
   ];
 
   return (
@@ -147,9 +147,9 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
             <GameButton
               key={game.id}
               game={game}
-              onStart={onStartGame}
-              isHost={isCurrentUserHost}
-              canStart={players.length >= 2}
+              // isHost={isCurrentUserHost}
+              // canStart={players.length >= 2}
+              // onStartGame={handleStartGame}
             />
           ))}
         </div>

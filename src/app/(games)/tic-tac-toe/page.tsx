@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 type Player = "X" | "O" | "tie" | null;
 type Board = Player[];
@@ -147,12 +147,12 @@ export default function Page() {
 
         {/* Controls */}
         <div className="text-center space-y-4">
-          <Button
+          <button
             onClick={resetGame}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 text-lg font-semibold rounded-xl"
           >
             🔄 Шинэ тоглоом
-          </Button>
+          </button>
 
           <div className="text-sm text-gray-600 space-y-1">
             <p>🦌 = X тоглогч</p>

@@ -3,7 +3,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import RoomLobby from "../components/RoomLobby";
-import { GameType, GameStatus, Room } from "../../../../types/type";
+import { GameType, GameStatus, Room } from "../../types/type";
 import { parseRoomSlug, isValidRoomSlug } from "../../../utils/roomSlug";
 import roomApi from "../../../utils/roomApi";
 import { getNickname, getStoredRoomData, storeRoomData } from "@/utils/localStorageHelper";
