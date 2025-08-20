@@ -1,15 +1,9 @@
 "use client";
 
 import React from "react";
-import { X } from "lucide-react";
 
-interface PlayerCardProps {
-  player: any;
-  isCurrentUser: boolean;
-  isHost: boolean;
-  isCurrentUserHost: boolean;
-  onRemove?: (nickname: string) => void;
-}
+import { X } from "lucide-react";
+import { PlayerCardProps } from "@/app/types/type";
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({
   player,

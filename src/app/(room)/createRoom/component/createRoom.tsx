@@ -2,14 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { CreateFormInputs } from "./CreateFormInput";
 import { checkRoomNameUnique, createRoom } from "@/utils/roomApi";
 import { createRoomSlug } from "@/utils/roomSlug";
-
-interface CreateRoomFormProps {
-  onRoomCreated?: (room: { roomName: string; roomCode: string; roomId: number }) => void;
-}
+import { CreateRoomFormProps } from "@/app/types/type";
 
 export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
   const [roomName, setRoomName] = useState("");

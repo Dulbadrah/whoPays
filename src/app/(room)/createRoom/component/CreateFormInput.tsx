@@ -1,15 +1,9 @@
-// src/components/CreateFormInputs.tsx
 "use client";
 
 import React from "react";
 
-interface CreateFormInputsProps {
-  roomName: string;
-  setRoomName: (value: string) => void;
-  nickname: string;
-  setNickname: (value: string) => void;
-  isLoading: boolean;
-}
+import { CreateFormInputsProps } from "@/app/types/type";
+
 
 export const CreateFormInputs: React.FC<CreateFormInputsProps> = ({
   roomName,

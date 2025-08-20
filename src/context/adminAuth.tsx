@@ -2,14 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { validateAdminKey, getAdminKey } from '@/lib/adminApi';
+import { AdminAuthContextType } from '@/app/types/type';
 
-type AdminAuthContextType = {
-  adminKey: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  login: (key: string) => Promise<boolean>;
-  logout: () => void;
-};
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 

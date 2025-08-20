@@ -2,14 +2,8 @@
 
 import React from "react";
 
-interface JoinFormInputsProps {
-  code: string;
-  setCode: (value: string) => void;
-  nickname: string;
-  setNickname: (value: string) => void;
-  isLoading: boolean;
-  onSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-}
+import { JoinFormInputsProps } from "@/app/types/type";
+
 
 export const JoinFormInputs: React.FC<JoinFormInputsProps> = ({ code, setCode, nickname, setNickname, isLoading, onSubmit }) => (
   <form onSubmit={onSubmit}>

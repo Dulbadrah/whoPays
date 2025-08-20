@@ -1,24 +1,23 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Users, LogOut } from "lucide-react";
-import { Room } from "../../types/type";
 
 import * as roomUtils from "@/utils/roomUtils";
+
+import { ArrowLeft, Users, LogOut } from "lucide-react";
+import { Room } from "../../types/type";
 import { GameButton } from "./GameButton";
 import { PlayerCard } from "./PlayerCard";
 
 
 interface RoomLobbyProps {
   room: Room | null;
-  onStartGame: (gameType: string) => void;
   onBack: () => void;
   onLeaveRoom?: () => void;
 }
 
 export const RoomLobby: React.FC<RoomLobbyProps> = ({
   room,
-  onStartGame,
   onBack,
   onLeaveRoom,
 }) => {
@@ -147,9 +146,8 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
             <GameButton
               key={game.id}
               game={game}
-              // isHost={isCurrentUserHost}
-              // canStart={players.length >= 2}
-              // onStartGame={handleStartGame}
+              isHost={isCurrentUserHost}
+              canStart={players.length >= 2}
             />
           ))}
         </div>

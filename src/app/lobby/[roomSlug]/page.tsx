@@ -129,5 +129,5 @@ export default function RoomLobbyPage() {
       </div>
     );
 
-  return <RoomLobby room={room} onStartGame={handleStartGame} onBack={handleBack} />;
+  return <RoomLobby room={room} onBack={handleBack} />;
 }

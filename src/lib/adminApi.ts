@@ -40,7 +40,6 @@ export async function promoteParticipant(roomCode: string, participantId: number
   return res.json();
 }
 
-// Note: removal endpoint may vary on your backend. Adjust path if necessary.
 export async function removeParticipant(roomCode: string, participantId: number) {
   const res = await fetch(
     `/admin/rooms/${encodeURIComponent(roomCode)}/remove/${participantId}`,
