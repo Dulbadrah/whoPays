@@ -1,43 +1,49 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/router";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
 export const ExcuseForm = () => {
   const [reason, setReason] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [roast, setRoast] = useState<string | null>(null);
-  
-  // ⭐ Шинэ: Шалтгаан амжилттай илгээгдсэн эсэхийг хянах
+
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  // ⭐ Шинэ: Серверийн хариу мессежийг хадгалах (хүлээлгийн эсвэл бусад)
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const params = useParams();
+  const searchParams = useSearchParams();
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setReason(e.target.value);
   };
 
-  const router = useRouter();
-const roomCode = router.query.room;
+  const roomCode = params.roomCode as string;
+
+  useEffect(() => {
+    if (roomCode) {
+      console.log("Room Code from URL:", roomCode);
+    }
+  }, [roomCode]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setRoast(null);
-    setIsSubmitted(false); // Илгээхээс өмнө submitted төлвийг false болгох
-    setStatusMessage(null); // Мессежийг цэвэрлэх
+    setIsSubmitted(false);
+    setStatusMessage(null);
 
     try {
-      const response = await fetch("http://localhost:4200/roast", { // Таны API endpoint
+      const response = await fetch("http://localhost:4200/roast", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          roomId: 1, 
-          reasons: [reason], 
+          roomId: roomCode,
+          reasons: [reason],
         }),
       });
 
@@ -46,24 +52,25 @@ const roomCode = router.query.room;
       if (!response.ok) {
         throw new Error(data.message || "Roast авахад алдаа гарлаа");
       }
-      
+
       console.log("🔥 Roast API response:", data);
 
-      setIsSubmitted(true); // Амжилттай илгээгдсэн гэж тэмдэглэх
-      setReason(""); // Бичих хэсгийг хоослох
+      setIsSubmitted(true);
+      setReason("");
 
       if (data.roast) {
-        setRoast(data.roast); // Roast ирсэн бол хадгалах
-        setStatusMessage("Roast амжилттай үүслээ!"); // Хэрэв шууд roast ирвэл
+        setRoast(data.roast);
+        setStatusMessage("Roast амжилттай үүслээ!");
       } else if (data.message) {
-        setStatusMessage(data.message); // Хүлээлгийн мессеж ирсэн бол хадгалах
+        setStatusMessage(data.message);
       } else {
-        setStatusMessage("Хариу ирсэн боловч, үүнийг харуулах мессеж алга байна.");
+        setStatusMessage(
+          "Хариу ирсэн боловч, үүнийг харуулах мессеж алга байна."
+        );
       }
-
     } catch (err: any) {
       setError(err.message || "Сервертэй холбогдоход алдаа гарлаа");
-      setIsSubmitted(false); // Алдаа гарвал буцаад маягтыг харуулах
+      setIsSubmitted(false);
     } finally {
       setLoading(false);
     }
@@ -72,7 +79,6 @@ const roomCode = router.query.room;
   return (
     <div className="flex items-center justify-center p-6">
       <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
-        {/* ⭐ Шинэ: Хэрэв илгээгдээгүй бол маягтыг харуулна */}
         {!isSubmitted ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <textarea
@@ -93,10 +99,11 @@ const roomCode = router.query.room;
             {error && <p className="text-red-600 text-center">{error}</p>}
           </form>
         ) : (
-          // ⭐ Шинэ: Илгээгдсэн бол статус болон roast-г харуулна
           <div className="text-center">
             {statusMessage && (
-              <p className="text-blue-600 font-semibold mb-4">{statusMessage}</p>
+              <p className="text-blue-600 font-semibold mb-4">
+                {statusMessage}
+              </p>
             )}
             {roast && (
               <div className="mt-4 bg-yellow-50 border border-yellow-300 p-4 rounded-xl shadow">
@@ -106,7 +113,6 @@ const roomCode = router.query.room;
                 <p className="italic text-gray-800">"{roast}"</p>
               </div>
             )}
-          
           </div>
         )}
       </div>
