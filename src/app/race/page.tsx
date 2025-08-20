@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "lucide-react";
+import { ExcuseBackground } from "../excuseSection/components/ExcuseBackground";
 
 type Player = {
   id: string;
@@ -73,7 +74,8 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-100 to-purple-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-400 to-purple-200">
+      <ExcuseBackground />
       <style>{`
         @keyframes roll {
           from { transform: rotate(0deg); }
@@ -169,13 +171,13 @@ export default function Page() {
               🔄 Дахин тоглох
             </Button>
             {/* <Link href="/lobby"> */}
-              <Button
-                onClick={() => setPhase("ready")}
-                variant="outline"
-                className="h-14 rounded-xl bg-green-500 hover:bg-green-700"
-              >
-                🏁 Лобби руу
-              </Button>
+            <Button
+              onClick={() => setPhase("ready")}
+              variant="outline"
+              className="h-14 rounded-xl bg-green-500 hover:bg-green-700"
+            >
+              🏁 Лобби руу
+            </Button>
             {/* </Link> */}
           </div>
         )}

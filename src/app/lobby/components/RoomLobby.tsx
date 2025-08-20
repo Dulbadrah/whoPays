@@ -9,8 +9,6 @@ import { GameButton } from "./GameButton";
 import { PlayerCard } from "./PlayerCard";
 import { useRouter } from "next/navigation";
 
-
-
 interface RoomLobbyProps {
   room: Room | null;
   onStartGame: (gameType: string) => void;
@@ -24,7 +22,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
   onBack,
   onLeaveRoom,
 }) => {
-    const router = useRouter();
+  const router = useRouter();
   if (!room) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -33,63 +31,91 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     );
   }
 
-  
-    const handleStartGame = (gameType: string) => {
-
-  if (gameType === "card-draw") {
-    router.push("/excuseSection"); 
-  } else {
-    // бусад тоглоомын route
-    router.push(`/game/${gameType}`);
-  }
-};
-
+  const handleStartGame = (gameType: string) => {
+    if (gameType === "card-draw") {
+      router.push("/excuseSection");
+    } else {
+      // бусад тоглоомын route
+      router.push(`/game/${gameType}`);
+    }
+  };
 
   const players = Array.isArray(room.participants) ? room.participants : [];
-  const currentUserNickname = typeof window !== 'undefined' ? localStorage.getItem('userNickname') : null;
+  const currentUserNickname =
+    typeof window !== "undefined" ? localStorage.getItem("userNickname") : null;
 
   // Current user is host
   let isCurrentUserHost = false;
   try {
-    const currentRoomData = typeof window !== 'undefined' ? localStorage.getItem('currentRoom') : null;
+    const currentRoomData =
+      typeof window !== "undefined"
+        ? localStorage.getItem("currentRoom")
+        : null;
     if (currentRoomData) {
       const parsed = JSON.parse(currentRoomData);
       isCurrentUserHost = parsed.isHost === true;
     }
   } catch (error) {
-    console.error('Error parsing room data:', error);
+    console.error("Error parsing room data:", error);
   }
 
   // Leave room handler
   const handleLeaveRoom = async () => {
-    
     if (!currentUserNickname) return;
 
     await roomUtils.removeParticipant(room.code, currentUserNickname);
-    localStorage.removeItem('currentRoom');
-    localStorage.removeItem('userNickname');
+    localStorage.removeItem("currentRoom");
+    localStorage.removeItem("userNickname");
 
     if (onLeaveRoom) onLeaveRoom();
     else onBack();
   };
 
-
-
-
   // Remove other player
   const handleRemovePlayer = async (playerNickname: string) => {
     if (!isCurrentUserHost || playerNickname === currentUserNickname) return;
 
-    const success = await roomUtils.removeParticipant(room.code, playerNickname);
+    const success = await roomUtils.removeParticipant(
+      room.code,
+      playerNickname
+    );
     if (success) window.location.reload();
   };
 
   // Games
   const games = [
-    { id: "spin-wheel", name: "Spin the Wheel", icon: require("lucide-react").Target, description: "Classic wheel spinning game", color: "bg-red-400 hover:bg-red-500 border-red-600", textColor: "text-red-900" },
-    { id: "dice-roll", name: "Lucky Dice", icon: require("lucide-react").Dice6, description: "Roll the dice to decide", color: "bg-green-400 hover:bg-green-500 border-green-600", textColor: "text-green-900" },
-    { id: "card-draw", name: "Шалтагаа тооч", icon: require("lucide-react").Trophy, description: "Өнөөдрийн тооцооноос хэн мултрахаа үзэх үү?", color: "bg-purple-400 hover:bg-purple-500 border-purple-600", textColor: "text-purple-900" },
-    { id: "number-guess", name: "Number Game", icon: require("lucide-react").Gamepad2, description: "Guess the magic number", color: "bg-orange-400 hover:bg-orange-500 border-orange-600", textColor: "text-orange-900" },
+    {
+      id: "spin-wheel",
+      name: "Spin the Wheel",
+      icon: require("lucide-react").Target,
+      description: "Classic wheel spinning game",
+      color: "bg-red-400 hover:bg-red-500 border-red-600",
+      textColor: "text-red-900",
+    },
+    {
+      id: "dice-roll",
+      name: "Lucky Dice",
+      icon: require("lucide-react").Dice6,
+      description: "Roll the dice to decide",
+      color: "bg-green-400 hover:bg-green-500 border-green-600",
+      textColor: "text-green-900",
+    },
+    {
+      id: "card-draw",
+      name: "Шалтагаа тооч",
+      icon: require("lucide-react").Trophy,
+      description: "Өнөөдрийн тооцооноос хэн мултрахаа үзэх үү?",
+      color: "bg-purple-400 hover:bg-purple-500 border-purple-600",
+      textColor: "text-purple-900",
+    },
+    {
+      id: "number-guess",
+      name: "Number Game",
+      icon: require("lucide-react").Gamepad2,
+      description: "Guess the magic number",
+      color: "bg-orange-400 hover:bg-orange-500 border-orange-600",
+      textColor: "text-orange-900",
+    },
   ];
 
   return (
@@ -97,11 +123,17 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <button onClick={onBack} className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium transition-colors bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium transition-colors bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm"
+          >
             <ArrowLeft size={20} />
             Нүүр хуудас
           </button>
-          <button onClick={handleLeaveRoom} className="flex items-center gap-2 text-red-700 hover:text-red-800 font-medium transition-colors bg-red-100/50 hover:bg-red-100/80 px-4 py-2 rounded-full backdrop-blur-sm border border-red-200">
+          <button
+            onClick={handleLeaveRoom}
+            className="flex items-center gap-2 text-red-700 hover:text-red-800 font-medium transition-colors bg-red-100/50 hover:bg-red-100/80 px-4 py-2 rounded-full backdrop-blur-sm border border-red-200"
+          >
             <LogOut size={20} />
             Өрөөнөөс гарах
           </button>
@@ -112,15 +144,21 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
       {/* Room Info */}
       <div className="max-w-4xl mx-auto mb-8">
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50 text-center">
-          <h1 className="text-3xl font-black text-blue-800 mb-2">Lobby Name: {room.roomname}</h1>
+          <h1 className="text-3xl font-black text-blue-800 mb-2">
+            Lobby Name: {room.roomname}
+          </h1>
           <div className="flex items-center justify-center gap-4 text-blue-600">
             <div className="flex items-center gap-2">
               <span className="font-bold">Room Code:</span>
-              <span className="bg-blue-100 px-3 py-1 rounded-full font-mono text-lg font-bold">{room.code}</span>
+              <span className="bg-blue-100 px-3 py-1 rounded-full font-mono text-lg font-bold">
+                {room.code}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Users size={20} />
-              <span className="font-bold">{players.length} participant{players.length !== 1 ? 's' : ''}</span>
+              <span className="font-bold">
+                {players.length} participant{players.length !== 1 ? "s" : ""}
+              </span>
             </div>
           </div>
         </div>
@@ -150,7 +188,9 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
               <div className="w-12 h-12 bg-blue-200 rounded-full mx-auto mb-3 flex items-center justify-center text-blue-500">
                 <Users size={24} />
               </div>
-              <p className="text-blue-600 font-medium text-sm">Waiting for more players...</p>
+              <p className="text-blue-600 font-medium text-sm">
+                Waiting for more players...
+              </p>
             </div>
           )}
         </div>
@@ -158,15 +198,19 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
 
       {/* Games */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-black text-blue-800 mb-4">Choose Your Game!</h2>
-        <p className="text-blue-700 text-lg font-medium mb-8">Pick a fun way to decide who pays the bill! 🎮</p>
+        <h2 className="text-3xl font-black text-blue-800 mb-4">
+          Choose Your Game!
+        </h2>
+        <p className="text-blue-700 text-lg font-medium mb-8">
+          Pick a fun way to decide who pays the bill! 🎮
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {games.map(game => (
+          {games.map((game) => (
             <GameButton
               key={game.id}
               game={game}
-                onStart={handleStartGame}
+              onStart={handleStartGame}
               isHost={isCurrentUserHost}
               canStart={players.length >= 2}
             />
@@ -177,9 +221,12 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
       {players.length < 2 && (
         <div className="mt-8 text-center">
           <div className="inline-block bg-yellow-100 border-2 border-yellow-300 rounded-2xl p-4">
-            <p className="text-yellow-800 font-bold">🎯 You need at least 2 players to start a game!</p>
+            <p className="text-yellow-800 font-bold">
+              🎯 You need at least 2 players to start a game!
+            </p>
             <p className="text-yellow-700 text-sm mt-1">
-              Share the room code <span className="font-black">{room.code}</span> with your friends
+              Share the room code{" "}
+              <span className="font-black">{room.code}</span> with your friends
             </p>
           </div>
         </div>
