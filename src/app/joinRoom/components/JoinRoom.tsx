@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // app router
-// эсвэл next/router ашиглаж болно хэрэв pages router бол
+import { useRouter } from "next/navigation";
 
 interface Participant {
   id: number;
@@ -23,7 +22,7 @@ interface JoinResponse {
 }
 
 export default function JoinRoomForm() {
-  const router = useRouter(); // router-г авна
+  const router = useRouter();
 
   const [code, setCode] = useState("");
   const [participantName, setParticipantName] = useState("");
@@ -90,7 +89,6 @@ export default function JoinRoomForm() {
     }
   };
 
-  // lobby руу шилжүүлэх функц
   const goToLobby = () => {
     if (displayRoom && displayParticipant) {
       router.push(

@@ -1,8 +1,5 @@
-
-
-import React from 'react';
-import Spin from './_component/Spin';
-
+import React from "react";
+import Spin from "./_component/Spin";
 
 const SpinPage: React.FC = () => {
   return (

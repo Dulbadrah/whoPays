@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-
 interface Player {
   id: number;
   name: string;
@@ -99,7 +98,6 @@ export default function RaceGame() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-indigo-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
-      {/* Glassmorphism card */}
       <div className="relative z-10 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 max-w-xl w-full border border-white/20 space-y-6">
         <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 drop-shadow-sm">
           🏁 Running Race

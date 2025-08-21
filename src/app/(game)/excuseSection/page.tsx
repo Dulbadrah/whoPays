@@ -7,7 +7,6 @@ import { AnimatedDotAll } from "@/components/ui/AnimatedDot";
 import { ExcuseBackground } from "./components/ExcuseBackground";
 import { ExcuseForm } from "./components/ExcuseForm";
 
-
 const ExcuseSection: React.FC = () => {
   const [submitted] = useState<boolean>(false);
 
@@ -23,12 +22,11 @@ const ExcuseSection: React.FC = () => {
         {submitted ? (
           <div className="text-center py-6 sm:py-8">
             <p className="text-lg font-bold text-green-600 mb-2 drop-shadow-sm">
-              Message sent successfully!
+              Шалтаг амжилттай илгээгдлээ!
             </p>
-            <p className="text-gray-600">Thank you for your submission.</p>
+            <p className="text-gray-600">Шалтагаа бичсэнд баярлалаа кк.</p>
           </div>
         ) : (
-    
           <ExcuseForm />
         )}
 
