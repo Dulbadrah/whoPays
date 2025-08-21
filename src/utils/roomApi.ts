@@ -1,6 +1,4 @@
-// src/utils/roomApi.ts
-export interface RoomDataResponse {
-  room?: {
+export interface RoomDataResponse {  room?: {
     id: number;
     code: string;
     roomname: string;

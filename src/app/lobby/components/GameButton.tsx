@@ -2,31 +2,17 @@
 
 import React from "react";
 
+import { useRouter } from "next/navigation";
+import { GameButtonProps } from "@/types/type";
 import { useRoom } from "@/context/room.context";
 
-interface GameProps {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ComponentType<{ size: number; className?: string }>;
-  color: string;
-  textColor: string;
-}
-
-interface GameButtonProps {
-  game: GameProps;
-  isHost: boolean;
-  canStart: boolean;
-}
-
-export const GameButton: React.FC<GameButtonProps> = ({ game }) => {
-
-  const { room } = useRoom(); 
+export const GameButton: React.FC<GameButtonProps> = ({  game, isHost, canStart }) => {
+  const router = useRouter();
+  const { room } = useRoom();
   const IconComponent = game.icon;
 
   const handleStart = () => {
-  
-
+        if (!isHost || !canStart) return; 
 
     const map: Record<string, string> = {
       "spin-wheel": "/spin",
@@ -35,29 +21,21 @@ export const GameButton: React.FC<GameButtonProps> = ({ game }) => {
       "tic-tac-toe": "/tic-tac-toe",
     };
 
-  
     const target =
       map[game.id] || (game.id.startsWith("/") ? game.id : `/games/${game.id}`);
 
-    // Хэрэв context-д өрөө байхгүй бол өрөөний параметрүүдгүйгээр чиглүүлэх
     if (!room) {
-      console.warn("Өрөө байхгүй тул өрөөний параметрүүдгүйгээр чиглүүлж байна");
-      window.location.href = target; // Шууд URL руу чиглүүлэх (Next.js useRouter-ын оронд)
+      console.warn("No room available, navigating without room params");
+      router.push(target);
       return;
     }
 
-    // Өрөөний параметрүүдийг URL-д кодлох
     const roomName = encodeURIComponent(room.roomName);
-    const roomCode = encodeURIComponent(room.roomCode); 
-    
-    console.log ("uruu", roomCode)// RoomForContext-с 'code'-г авч байна гэж үзвэл
-    // 'nickname' нь таны өрөөний объект дээрх property эсвэл өөр эх сурвалжаас ирэх ёстой.
-    // Одоохондоо 'current_player_nickname_placeholder'-г ашигласан.
-    const nickname = encodeURIComponent("current_player_nickname_placeholder"); // Энд жинхэнэ nickname логикийг оруулна уу
+    const roomCode = encodeURIComponent(room.roomCode);
+    const nickname = encodeURIComponent(localStorage.getItem('nickname') || '');
 
-    // Параметрүүдтэй URL-г үүсгэх
     const url = `${target}?roomName=${roomName}&roomCode=${roomCode}&nickname=${nickname}`;
-    window.location.href = url; // Шууд URL руу чиглүүлэх
+    router.push(url);
   };
 
   return (
