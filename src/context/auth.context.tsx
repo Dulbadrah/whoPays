@@ -2,9 +2,7 @@
 
 import { getAdminKey, validateAdminKey } from '@/lib/adminAPI';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AdminAuthContextType } from '../../types/type';
-
-
+import { AdminAuthContextType } from '../types/type';
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 

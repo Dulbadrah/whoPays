@@ -3,7 +3,7 @@
 import React from "react";
 
 import { X } from "lucide-react";
-import { PlayerCardProps } from "../../../../types/type";
+import { PlayerCardProps } from "../../../types/type";
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({
   player,

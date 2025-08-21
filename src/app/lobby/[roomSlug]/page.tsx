@@ -7,7 +7,7 @@ import RoomLobby from "../components/RoomLobby";
 import { parseRoomSlug, isValidRoomSlug } from "../../../utils/roomSlug";
 import roomApi from "../../../utils/roomApi";
 import { getNickname, getStoredRoomData, storeRoomData } from "@/utils/localStorageHelper";
-import { GameStatus, GameType, Room } from "../../../../types/type";
+import { GameStatus, GameType, Room } from "../../../types/type";
 
 export default function RoomLobbyPage() {
   const params = useParams();
@@ -16,7 +16,7 @@ export default function RoomLobbyPage() {
   const [room, setRoom] = useState<Room| null>(null);
   const [loading, setLoading] = useState(true);
 
-  const roomSlug = params.roomSlug as string;
+  const roomSlug = params?.roomSlug as string;
 
   useEffect(() => {
     if (!roomSlug || !isValidRoomSlug(roomSlug)) {
@@ -31,7 +31,7 @@ export default function RoomLobbyPage() {
     }
 
     const { roomName, roomCode } = slugData;
-    const nickname = getNickname(searchParams);
+    const nickname = searchParams ? getNickname(searchParams) : null;
 
     if (!nickname) {
       router.push("/joinRoom");

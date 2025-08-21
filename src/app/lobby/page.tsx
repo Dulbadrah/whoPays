@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import RoomLobby from "./components/RoomLobby";
-import { GameStatus, GameType, Room } from "../../../types/type";
+import { GameStatus, GameType, Room } from "../../types/type";
 
 export default function LobbyPage() {
   const searchParams = useSearchParams();
@@ -10,9 +10,10 @@ export default function LobbyPage() {
   const [room, setRoom] = useState<Room | null>(null);
 
   useEffect(() => {
-    const roomNameFromURL = searchParams.get("roomName");
-    const roomCodeFromURL = searchParams.get("roomCode");
-    const nicknameFromURL = searchParams.get("nickname");
+    // Try to get room data from URL parameters first
+    const roomNameFromURL = searchParams?.get("roomName");
+    const roomCodeFromURL = searchParams?.get("roomCode");
+    const nicknameFromURL = searchParams?.get("nickname");
 
     const storedRoomData = localStorage.getItem("currentRoom");
     const storedNickname = localStorage.getItem("userNickname");
