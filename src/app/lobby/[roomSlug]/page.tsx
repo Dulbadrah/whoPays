@@ -43,12 +43,21 @@ export default function RoomLobbyPage() {
         const data = await roomApi.fetchRoomData(roomCode);
         if (data?.room) {
           setRoom(data.room);
+          
+          // Check if user is already stored as host (from room creation)
+          const existingRoomData = getStoredRoomData(roomCode);
+          const isHost = existingRoomData?.isHost || false;
+          
+          console.log('Existing room data:', existingRoomData);
+          console.log('Preserving host status:', isHost, 'for user:', nickname);
+          
           storeRoomData({
             roomName: data.room.roomname,
             roomCode: data.room.code,
             roomId: data.room.id,
             nickname,
             createdAt: new Date().toISOString(),
+            isHost: isHost, // Preserve existing host status
           });
         } else {
           const stored = getStoredRoomData(roomCode);
@@ -124,5 +133,5 @@ export default function RoomLobbyPage() {
       </div>
     );
 
-  return <RoomLobby room={room} onBack={handleBack} />;
+  return <RoomLobby room={room} onBack={handleBack} onRoomUpdate={setRoom} />;
 }
