@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
 import { ExcuseBackground } from "../excuseSection/components/ExcuseBackground";
 
 type Player = {

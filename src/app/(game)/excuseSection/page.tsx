@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useState } from "react";
 import { ExcuseHeader } from "./components/ExcuseHeader";
 import { AnimatedDotAll } from "@/components/ui/AnimatedDot";
 import { ExcuseBackground } from "./components/ExcuseBackground";
@@ -9,7 +9,7 @@ import { ExcuseForm } from "./components/ExcuseForm";
 
 
 const ExcuseSection: React.FC = () => {
-  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [submitted] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">

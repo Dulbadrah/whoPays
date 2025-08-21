@@ -7,9 +7,9 @@ export interface RoomDataResponse {
     createdAt?: string;
     gameType?: string;
     gamestatus?: string;
-    results?: any[];
-    participants?: any[];
-    message?: any[];
+    results?: string[];
+    participants?: string[];
+    message?: string[];
   };
   message?: string;
 }

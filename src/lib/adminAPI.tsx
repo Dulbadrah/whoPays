@@ -65,7 +65,7 @@ export async function getSettings() {
   return res.json();
 }
 
-export async function updateSettings(payload: any) {
+export async function updateSettings(payload: string) {
   const res = await fetch(`/admin/settings`, { method: 'POST', body: JSON.stringify(payload), ...withAuth() });
   if (!res.ok) throw res;
   return res.json();
@@ -83,7 +83,7 @@ export async function validateAdminKey(candidate: string) {
     if (res.ok) return true;
     res = await fetch('/admin/me', { headers: { Authorization: `Bearer ${candidate}` } });
     return res.ok;
-  } catch (e) {
+  } catch (error) {
     return false;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
@@ -12,7 +12,7 @@ export const ExcuseForm = () => {
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const params = useParams();
+  
   const searchParams = useSearchParams();
 
 
@@ -27,7 +27,7 @@ export const ExcuseForm = () => {
 
   useEffect(() => {
     if (roomCode) {
-      // console.log("Room Code from URL:", roomCode);
+  
     }
   }, [roomCode]);
 
@@ -73,7 +73,7 @@ export const ExcuseForm = () => {
           "Хариу ирсэн боловч, үүнийг харуулах мессеж алга байна."
         );
       }
-    } catch (err: any) {
+    } catch (err: string | any) {
       setError(err.message || "Сервертэй холбогдоход алдаа гарлаа");
       setIsSubmitted(false);
     } finally {
@@ -115,7 +115,7 @@ export const ExcuseForm = () => {
                 <h3 className="text-lg font-bold text-yellow-800 mb-2">
                   🤖 AI Roast:
                 </h3>
-                <p className="italic text-gray-800">"{roast}"</p>
+                <p className="italic text-gray-800">{roast}</p>
               </div>
             )}
           </div>

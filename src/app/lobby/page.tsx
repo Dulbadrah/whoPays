@@ -18,7 +18,6 @@ export default function LobbyPage() {
 
     // Get stored data as fallback
     const storedRoomData = localStorage.getItem('currentRoom');
-    const storedRoomCode = localStorage.getItem('roomCode');
     const storedNickname = localStorage.getItem('userNickname');
 
     let finalRoomName = roomNameFromURL;

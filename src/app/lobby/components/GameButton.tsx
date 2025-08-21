@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { Snail } from "lucide-react"; 
 import { useRoom } from "@/context/room.context";
 
 interface GameProps {
@@ -20,7 +19,7 @@ interface GameButtonProps {
   canStart: boolean;
 }
 
-export const GameButton: React.FC<GameButtonProps> = ({ game, isHost, canStart }) => {
+export const GameButton: React.FC<GameButtonProps> = ({ game }) => {
 
   const { room } = useRoom(); 
   const IconComponent = game.icon;
