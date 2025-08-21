@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createRoomSlug } from "../../../utils/roomSlug";
 
 interface Participant {
   id: number;
@@ -91,13 +92,24 @@ export default function JoinRoomForm() {
 
   const goToLobby = () => {
     if (displayRoom && displayParticipant) {
-      router.push(
-        `/lobby?roomName=${encodeURIComponent(
-          displayRoom.name
-        )}&roomCode=${encodeURIComponent(
-          displayRoom.code
-        )}&participantName=${encodeURIComponent(displayParticipant.name)}`
+      // Store room data with isHost: false for joined participants
+      localStorage.setItem(
+        "currentRoom",
+        JSON.stringify({
+          roomName: displayRoom.name,
+          roomCode: displayRoom.code,
+          roomId: displayRoom.id,
+          nickname: displayParticipant.name,
+          isHost: false, // Joined participants are not hosts
+          createdAt: new Date().toISOString(),
+        })
       );
+      localStorage.setItem("userNickname", displayParticipant.name);
+
+      // Create room slug and navigate
+      const roomSlug = createRoomSlug(displayRoom.name, displayRoom.code);
+      const params = new URLSearchParams({ nickname: displayParticipant.name });
+      router.push(`/lobby/${roomSlug}?${params.toString()}`);
     }
   };
 

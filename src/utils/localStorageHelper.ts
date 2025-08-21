@@ -4,6 +4,7 @@ export interface StoredRoomData {
   roomId: number;
   nickname: string;
   createdAt: string;
+  isHost?: boolean;
 }
 
 export const getStoredRoomData = (roomCode: string): StoredRoomData | null => {

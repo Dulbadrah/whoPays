@@ -14,6 +14,8 @@ export interface RoomDataResponse {
   message?: string;
 }
 
+import { Room } from "@/types/type";
+
 export const createRoom = async (roomName: string, hostNickname: string) => {
   try {
     return await fetch(`http://localhost:4200/room`, {
@@ -86,7 +88,7 @@ export const fetchRoomData = async (roomCode: string) => {
   }
 };
 
-export const pollRoomData = (roomCode: string, callback: (room: any) => void, ) => {
+export const pollRoomData = (roomCode: string, callback: (room: Room) => void, ) => {
   const id = setInterval(async () => {
     try {
       const data = await fetchRoomData(roomCode);
@@ -155,7 +157,7 @@ const roomApi = {
     return res.json();
   },
 
-  pollRoomData: (roomCode: string, callback: (room: any) => void, interval = 3000) => {
+  pollRoomData: (roomCode: string, callback: (room: Room) => void, interval = 3000) => {
     const id = setInterval(async () => {
       try {
         const data = await roomApi.fetchRoomData(roomCode);

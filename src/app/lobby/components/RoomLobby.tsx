@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 import * as roomUtils from "@/utils/roomUtils";
 
@@ -14,13 +15,134 @@ interface RoomLobbyProps {
   room: Room | null;
   onBack: () => void;
   onLeaveRoom?: () => void;
+  onRoomUpdate?: (room: Room) => void;
 }
 
 export const RoomLobby: React.FC<RoomLobbyProps> = ({
   room,
   onBack,
   onLeaveRoom,
+  onRoomUpdate,
 }) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (room && typeof window !== 'undefined') {
+      const socketInstance = io('http://localhost:3000', {
+        path: '/api/socket',
+        transports: ['polling', 'websocket'],
+        upgrade: true,
+        rememberUpgrade: false,
+        timeout: 20000,
+        forceNew: false, // Don't force new connection, reuse existing
+        autoConnect: true
+      });
+      
+      socketInstance.on('connect', () => {
+        const currentUserNickname = localStorage.getItem("userNickname");
+        let isCurrentUserHost = false;
+        
+        try {
+          const currentRoomData = localStorage.getItem("currentRoom");
+          if (currentRoomData) {
+            const parsed = JSON.parse(currentRoomData);
+            isCurrentUserHost = parsed.isHost === true;
+          }
+        } catch (error) {
+          console.error("Error parsing room data:", error);
+        }
+
+        // Join the room via socket only after connection is established
+        if (currentUserNickname) {
+          socketInstance.emit('join', {
+            roomId: room.code,
+            name: currentUserNickname,
+            isHost: isCurrentUserHost
+          });
+        }
+      });
+      
+      socketInstance.on('connect_error', (error) => {
+        console.error('Lobby socket connection error:', error);
+      });
+
+      // Listen for game selection events
+      socketInstance.on('game:selected', ({ gameType }) => {
+        setSelectedGame(gameType);
+      });
+
+      // Listen for game start events and redirect
+      socketInstance.on('game:start', ({ gameType, roomCode }) => {
+        const gamePathMap: Record<string, string> = {
+          "spin-wheel": "/spin",
+          "Lets-run": "/runnerGame", 
+          "Excuse-section": "/excuseSection",
+          "tic-tac-toe": "/tic-tac-toe",
+        };
+
+        const path = gamePathMap[gameType];
+        if (path) {
+          const roomName = encodeURIComponent(room?.roomname || '');
+          const nickname = encodeURIComponent(localStorage.getItem('userNickname') || '');
+          
+          // Determine if current user is host
+          let isCurrentUserHost = false;
+          try {
+            const currentRoomData = localStorage.getItem("currentRoom");
+            if (currentRoomData) {
+              const parsed = JSON.parse(currentRoomData);
+              isCurrentUserHost = parsed.isHost === true;
+            }
+          } catch (error) {
+            console.error("Error parsing room data for host info:", error);
+          }
+          
+          const isHostParam = isCurrentUserHost ? 'true' : 'false';
+          const url = `${path}?roomName=${roomName}&roomCode=${roomCode}&nickname=${nickname}&isHost=${isHostParam}`;
+          window.location.href = url;
+        }
+      });
+
+      // Listen for errors
+      socketInstance.on('error', (error) => {
+        console.error('Socket error received:', error);
+        alert(`Error: ${error.message}`);
+      });
+
+      // Listen for participant removal notification
+      socketInstance.on('participant_removed', (data) => {
+        alert(data.message);
+        // Redirect to join room page
+        window.location.href = '/joinRoom';
+      });
+
+      // Listen for room state updates to keep lobby in sync
+      socketInstance.on('room_state', (data) => {
+        if (data.participants && room && onRoomUpdate) {
+          // Update the room state with new participant list
+          const updatedRoom: Room = {
+            ...room,
+            participants: data.participants
+          };
+          onRoomUpdate(updatedRoom);
+        }
+      });
+
+      // Listen for participant left events
+      socketInstance.on('participant_left', (socketId) => {
+        console.log('Participant left:', socketId);
+        // Room state will be updated via room_state event
+      });
+
+      setSocket(socketInstance);
+
+      return () => {
+        socketInstance.disconnect();
+      };
+    }
+  }, [room?.code]); // Only depend on room code, not entire room object
+
   if (!room) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -50,7 +172,14 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
   const handleLeaveRoom = async () => {
     if (!currentUserNickname) return;
 
-    await roomUtils.removeParticipant(room.code, currentUserNickname);
+    // Leave via socket
+    if (socket) {
+      socket.emit('leave', { roomId: room.code });
+    }
+
+    if (currentUserNickname) {
+      await roomUtils.removeParticipant(socket, room.code, currentUserNickname);
+    }
     localStorage.removeItem("currentRoom");
     localStorage.removeItem("userNickname");
 
@@ -62,10 +191,16 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
     if (!isCurrentUserHost || playerNickname === currentUserNickname) return;
 
     const success = await roomUtils.removeParticipant(
+      socket,
       room.code,
       playerNickname
     );
-    if (success) window.location.reload();
+    if (success) {
+      // Room state will be updated via socket event, no need to reload
+      console.log(`Successfully removed ${playerNickname}`);
+    } else {
+      alert('Failed to remove player. Please try again.');
+    }
   };
 
   const games = [
@@ -190,6 +325,9 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
               game={game}
               isHost={isCurrentUserHost}
               canStart={players.length >= 2}
+              socket={socket}
+              selectedGame={selectedGame}
+              roomCode={room.code}
             />
           ))}
         </div>

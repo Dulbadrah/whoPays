@@ -28,8 +28,15 @@ export interface Participant {
   name: string;
   roomId: number;
   createdAt: string;
-  results: Result[];
-  reasons: Reason[];
+  isHost: boolean;
+}
+
+export interface Player {
+  id: number;
+  name: string;
+  progress: number;
+  socketId?: string;
+  isMe?: boolean;
 }
 
 export interface Reason {
@@ -76,13 +83,13 @@ export interface Game {
 
 export interface GameButtonProps {
   game: Game;
-  room?: any;
+  room?: Room;
   isHost: boolean;
   canStart: boolean
 }
 
 export interface PlayerCardProps {
-  player: any;
+  player: Participant;
   isCurrentUser: boolean;
   isHost: boolean;
   isCurrentUserHost: boolean;
@@ -117,3 +124,12 @@ export type AdminAuthContextType = {
   login: (key: string) => Promise<boolean>;
   logout: () => void;
 };
+
+export interface GameProps {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ComponentType<{ size: number; className?: string }>;
+  color: string;
+  textColor: string;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { getAdminKey, validateAdminKey } from '@/lib/adminAPI';
+import { getAdminKey, validateAdminKey } from '@/utils/adminAPI';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AdminAuthContextType } from '../types/type';
 

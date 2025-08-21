@@ -1,19 +1,46 @@
 // roomUtils.ts
 
 // Host шалгах helper
-export const isHost = (participant: any, index: number) => participant.isHost || index === 0;
+import { Participant } from "@/types/type";
+import { Socket } from "socket.io-client";
 
-// Participant устгах helper
-export const removeParticipant = async (roomCode: string, nickname: string) => {
-  try {
-    const response = await fetch(`http://localhost:4200/room/${roomCode}/participants`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nickname }),
+export const isHost = (participant: Participant, index: number) => participant.isHost || index === 0;
+
+// Participant устгах helper - Updated to use existing socket connection
+export const removeParticipant = async (socket: Socket | null, roomCode: string, nickname: string) => {
+  return new Promise<boolean>((resolve) => {
+    if (!socket) {
+      console.error('No socket connection available');
+      resolve(false);
+      return;
+    }
+
+    // Set up one-time listeners for the response
+    const onError = (error: any) => {
+      console.error('Error removing participant:', error);
+      socket.off('room_state', onSuccess);
+      resolve(false);
+    };
+
+    const onSuccess = () => {
+      socket.off('error', onError);
+      resolve(true);
+    };
+
+    socket.once('error', onError);
+    socket.once('room_state', onSuccess);
+
+    // Emit the remove participant event
+    socket.emit('remove_participant', { 
+      roomId: roomCode, 
+      participantName: nickname 
     });
-    return response.ok;
-  } catch (error) {
-    console.error("Error removing participant:", error);
-    return false;
-  }
+
+    // Timeout after 5 seconds
+    setTimeout(() => {
+      socket.off('error', onError);
+      socket.off('room_state', onSuccess);
+      resolve(false);
+    }, 5000);
+  });
 };
