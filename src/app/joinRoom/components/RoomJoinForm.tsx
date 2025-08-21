@@ -16,11 +16,13 @@ export default function JoinRoomForm() {
   const [nickname, setNickname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [roomData, setRoomData] = useState<{ name: string; code: string } | null>(null);
+  const [roomData, setRoomData] = useState<{
+    name: string;
+    code: string;
+  } | null>(null);
 
   const router = useRouter();
 
-  // Navigation function
   const handleNavigateToLobby = (roomName: string, roomCode: string) => {
     const storedNickname = localStorage.getItem("userNickname") || "";
     const roomSlug = createRoomSlug(roomName, roomCode);
@@ -28,7 +30,6 @@ export default function JoinRoomForm() {
     router.push(`/lobby/${roomSlug}?${params.toString()}`);
   };
 
-  // Form submit
   const handleJoin = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
     setIsLoading(true);
@@ -49,7 +50,6 @@ export default function JoinRoomForm() {
     }
 
     try {
-      // 1️⃣ Room exists check
       const { ok, data } = await checkRoomExists(trimmedCode);
       if (!ok || !data.room) {
         setErrorMessage(data.message || "Өгөгдсөн кодтой өрөө олдсонгүй.");
@@ -57,8 +57,10 @@ export default function JoinRoomForm() {
         return;
       }
 
-      // 2️⃣ Nickname availability check
-      const nicknameRes = await checkNicknameAvailable(trimmedCode, trimmedNickname);
+      const nicknameRes = await checkNicknameAvailable(
+        trimmedCode,
+        trimmedNickname
+      );
       if (!nicknameRes.ok) {
         const errData = await nicknameRes.json();
         setErrorMessage(
@@ -70,7 +72,6 @@ export default function JoinRoomForm() {
         return;
       }
 
-      // 3️⃣ Add participant
       const addRes = await addParticipantToRoom(trimmedCode, trimmedNickname);
       if (!addRes.ok) {
         const errData = await addRes.json();
@@ -87,7 +88,6 @@ export default function JoinRoomForm() {
       const roomName = data.room?.roomname || "";
       const roomCode = data.room?.code || "";
 
-      // 4️⃣ Save room + nickname in localStorage
       localStorage.setItem(
         "currentRoom",
         JSON.stringify({
@@ -105,7 +105,6 @@ export default function JoinRoomForm() {
       setRoomData({ name: roomName, code: roomCode });
       setIsLoading(false);
 
-      // 5️⃣ Navigate to lobby
       handleNavigateToLobby(roomName, roomCode);
     } catch (err) {
       console.error("Error joining room:", err);
@@ -116,18 +115,17 @@ export default function JoinRoomForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
-      <ExcuseBackground/>
+      <ExcuseBackground />
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
-    
-    <div className="items-center text-center mb-8">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-blue-400 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
-          Өрөөнд
+        <div className="items-center text-center mb-8">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-blue-400 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
+            Өрөөнд
           </h1>
           <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-green-400 mb-2 drop-shadow-2xl transform rotate-1">
-         Нэгдэх
+            Нэгдэх
           </h1>
-          </div>
-        {/* Input form component */}
+        </div>
+
         <JoinFormInputs
           code={code}
           setCode={setCode}
@@ -137,9 +135,11 @@ export default function JoinRoomForm() {
           onSubmit={handleJoin}
         />
 
-        {/* Error message */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4" role="alert">
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4"
+            role="alert"
+          >
             <strong className="font-bold">Алдаа гарлаа! </strong>
             <span className="block sm:inline">{errorMessage}</span>
           </div>

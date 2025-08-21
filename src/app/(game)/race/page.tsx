@@ -7,7 +7,7 @@ import { ExcuseBackground } from "../excuseSection/components/ExcuseBackground";
 type Player = {
   id: string;
   name: string;
-  progress: number; // 0-100
+  progress: number;
 };
 
 type Phase = "ready" | "countdown" | "race" | "finished";
@@ -22,7 +22,6 @@ export default function Page() {
   const [countdown, setCountdown] = useState<number>(3);
   const [winner, setWinner] = useState<string | null>(null);
 
-  // Winner check
   useEffect(() => {
     if (phase !== "race") return;
     const w = players.find((p) => p.progress >= 100);
@@ -32,7 +31,6 @@ export default function Page() {
     }
   }, [players, phase, winner]);
 
-  // Countdown effect
   useEffect(() => {
     if (phase !== "countdown") return;
     setCountdown(3);
@@ -86,7 +84,6 @@ export default function Page() {
         }
       `}</style>
 
-      {/* Header / Status */}
       <div className="p-4 pb-0">
         <h1 className="text-2xl font-bold text-gray-800">🍽️ Restaurant Race</h1>
         <p className="text-gray-600 text-sm">
@@ -94,7 +91,6 @@ export default function Page() {
         </p>
       </div>
 
-      {/* Players progress list */}
       <div className="flex-1 p-4 space-y-6">
         {players.map((p) => (
           <div key={p.id} className="bg-white rounded-xl shadow p-3 relative">
@@ -103,12 +99,11 @@ export default function Page() {
               <span>{p.progress}%</span>
             </div>
             <div className="h-4 bg-gray-200 rounded-full overflow-hidden relative">
-              {/* Progress background */}
               <div
                 className="h-full bg-blue-500 transition-[width] duration-200"
                 style={{ inlineSize: `${p.progress}%` }}
               />
-              {/* Rolling Ball emoji */}
+
               <div
                 className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
                 style={{ insetInlineStart: `calc(${p.progress}% - 1px)` }}
@@ -119,7 +114,6 @@ export default function Page() {
           </div>
         ))}
 
-        {/* Countdown / Winner banners */}
         {phase === "countdown" && (
           <div className="text-center text-3xl font-extrabold text-indigo-700">
             {countdown === 0 ? "GO!" : countdown}
@@ -132,7 +126,6 @@ export default function Page() {
         )}
       </div>
 
-      {/* Bottom control bar */}
       <div className="p-4 bg-white shadow-inner space-y-3">
         {phase === "ready" && (
           <Button
@@ -169,7 +162,7 @@ export default function Page() {
             >
               🔄 Дахин тоглох
             </Button>
-            {/* <Link href="/lobby"> */}
+
             <Button
               onClick={() => setPhase("ready")}
               variant="outline"
@@ -177,7 +170,6 @@ export default function Page() {
             >
               🏁 Лобби руу
             </Button>
-            {/* </Link> */}
           </div>
         )}
       </div>

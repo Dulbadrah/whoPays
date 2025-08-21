@@ -8,7 +8,11 @@ import { CreateFormInputs } from "./CreateFormInput";
 import { ExcuseBackground } from "@/app/(game)/excuseSection/components/ExcuseBackground";
 
 interface CreateRoomFormProps {
-  onRoomCreated?: (room: { roomName: string; roomCode: string; roomId: number }) => void;
+  onRoomCreated?: (room: {
+    roomName: string;
+    roomCode: string;
+    roomId: number;
+  }) => void;
 }
 
 export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
@@ -39,7 +43,6 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
     }
 
     try {
-      // 1️⃣ Check if room name is unique
       const checkRes = await checkRoomNameUnique(trimmedRoomName);
       if (!checkRes.ok) {
         const data = await checkRes.json();
@@ -52,7 +55,6 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
         return;
       }
 
-      // 2️⃣ Create room
       const createRes = await createRoom(trimmedRoomName, trimmedNickname);
       if (!createRes.ok) {
         const data = await createRes.json();
@@ -67,7 +69,6 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
 
       const result = await createRes.json();
 
-      // 3️⃣ Store room data in localStorage
       localStorage.setItem(
         "currentRoom",
         JSON.stringify({
@@ -82,7 +83,6 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
       );
       localStorage.setItem("userNickname", trimmedNickname);
 
-      // 4️⃣ Callback for parent component (optional)
       if (onRoomCreated) {
         onRoomCreated({
           roomName: result.roomName,
@@ -91,7 +91,6 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
         });
       }
 
-      // 5️⃣ Navigate to lobby
       const roomSlug = createRoomSlug(result.roomName, result.roomCode);
       const params = new URLSearchParams({ nickname: trimmedNickname });
       router.push(`/lobby/${roomSlug}?${params.toString()}`);
@@ -104,23 +103,21 @@ export default function CreateRoom({ onRoomCreated }: CreateRoomFormProps) {
   };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
-    <ExcuseBackground/>
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+      <ExcuseBackground />
       <form
         className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg"
         onSubmit={handleCreateRoom}
       >
-      
-          <div className="items-center text-center mb-8">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-green-300 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
-           Өрөө
+        <div className="items-center text-center mb-8">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-green-300 mb-2 sm:mb-4 drop-shadow-2xl transform -rotate-2">
+            Өрөө
           </h1>
           <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-yellow-400 mb-2 drop-shadow-2xl transform rotate-1">
-           Үүсгэх
+            Үүсгэх
           </h1>
-          </div>
+        </div>
 
-        {/* Input fields modular */}
         <CreateFormInputs
           roomName={roomName}
           setRoomName={setRoomName}

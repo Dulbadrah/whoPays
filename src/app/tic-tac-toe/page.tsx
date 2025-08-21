@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 type Player = "X" | "O" | "tie" | null;
 type Board = Player[];
 
-const SIZE = 5; // 5x5 самбар
-const WIN_LENGTH = 4; // 4 дараалсан мөр/багана/диагональ хожих
+const SIZE = 5;
+const WIN_LENGTH = 4;
 
 export default function Page() {
   const [board, setBoard] = useState<Board>(Array(SIZE * SIZE).fill(null));
@@ -22,7 +22,6 @@ export default function Page() {
         const player = getCell(x, y);
         if (!player) continue;
 
-        // Horizontal
         if (x + WIN_LENGTH - 1 < SIZE) {
           let win = true;
           for (let i = 1; i < WIN_LENGTH; i++)
@@ -30,7 +29,6 @@ export default function Page() {
           if (win) return player;
         }
 
-        // Vertical
         if (y + WIN_LENGTH - 1 < SIZE) {
           let win = true;
           for (let i = 1; i < WIN_LENGTH; i++)
@@ -38,7 +36,6 @@ export default function Page() {
           if (win) return player;
         }
 
-        // Diagonal \
         if (x + WIN_LENGTH - 1 < SIZE && y + WIN_LENGTH - 1 < SIZE) {
           let win = true;
           for (let i = 1; i < WIN_LENGTH; i++)
@@ -46,7 +43,6 @@ export default function Page() {
           if (win) return player;
         }
 
-        // Diagonal /
         if (x - (WIN_LENGTH - 1) >= 0 && y + WIN_LENGTH - 1 < SIZE) {
           let win = true;
           for (let i = 1; i < WIN_LENGTH; i++)
@@ -83,7 +79,6 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-yellow-100 flex items-center justify-center p-4">
       <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-md w-full">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             🦌 Буга Тоглоом
@@ -91,7 +86,6 @@ export default function Page() {
           <p className="text-lg text-gray-600">Tic Tac Toe</p>
         </div>
 
-        {/* Game Status */}
         <div className="text-center mb-6">
           {!winner && (
             <p className="text-xl font-semibold text-gray-700">
@@ -120,8 +114,6 @@ export default function Page() {
           )}
         </div>
 
-        {/* Game Board */}
-        {/* Game Board */}
         <div className="grid grid-cols-5 gap-2 mb-6 bg-gray-200 p-2 rounded-xl w-full max-w-md mx-auto">
           {board.map((value, index) => (
             <button
@@ -145,7 +137,6 @@ export default function Page() {
           ))}
         </div>
 
-        {/* Controls */}
         <div className="text-center space-y-4">
           <Button
             onClick={resetGame}

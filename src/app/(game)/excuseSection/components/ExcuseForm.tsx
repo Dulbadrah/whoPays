@@ -12,22 +12,17 @@ export const ExcuseForm = () => {
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  
+
   const searchParams = useSearchParams();
-
-
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setReason(e.target.value);
   };
 
-
-
-  const roomCode = searchParams.get('roomCode') as string;
+  const roomCode = searchParams.get("roomCode") as string;
 
   useEffect(() => {
     if (roomCode) {
-  
     }
   }, [roomCode]);
 
@@ -47,7 +42,7 @@ export const ExcuseForm = () => {
         },
         body: JSON.stringify({
           code: roomCode,
-    
+
           reasons: [reason],
         }),
       });
@@ -57,8 +52,6 @@ export const ExcuseForm = () => {
       if (!response.ok) {
         throw new Error(data.message || "Roast авахад алдаа гарлаа");
       }
-
-      // console.log("🔥 Roast API response:", data);
 
       setIsSubmitted(true);
       setReason("");
