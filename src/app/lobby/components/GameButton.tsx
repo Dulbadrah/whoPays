@@ -12,7 +12,7 @@ export const GameButton: React.FC<GameButtonProps> = ({  game, isHost, canStart 
   const IconComponent = game.icon;
 
   const handleStart = () => {
-        // if (!isHost || !canStart) return; 
+        if (!isHost || !canStart) return; 
 
     const map: Record<string, string> = {
       "spin-wheel": "/spin",
