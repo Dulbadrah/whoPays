@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { io } from "socket.io-client";
 
-
-interface Player {
+type Player = {
   id: number;
   name: string;
   progress: number;
-  isMe: boolean;
-}
+  isMe?: boolean;
+  socketId?: string;
+};
 
-interface RoomData {
-  participants: { id: number; name: string; progress?: number }[];
-}
+
 
 export default function RaceGame() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [winner, setWinner] = useState<string | null>(null);
-  const [roomId, setRoomId] = useState<number | null>(null);
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const socketRef = useRef<any>(null);
 
   useEffect(() => {
     const storedRoom = localStorage.getItem("currentRoom");
@@ -26,70 +26,73 @@ export default function RaceGame() {
       try {
         const parsedRoom = JSON.parse(storedRoom);
         if (parsedRoom.roomCode) {
-          setRoomId(parsedRoom.roomCode);
-        } else {
-          console.error("Room id байхгүй байна");
+          setRoomId(String(parsedRoom.roomCode));
         }
-      } catch {
-        console.error("currentRoom-г уншихад алдаа");
+      } catch (e) {
+        console.error("Failed to parse currentRoom", e);
       }
-    } else {
-      console.error("currentRoom localStorage-д байхгүй байна");
     }
   }, []);
 
   useEffect(() => {
     if (!roomId) return;
 
-    const fetchRoom = async () => {
-      try {
-        const res = await fetch(`http://localhost:4200/room/${roomId}`);
-        if (!res.ok) throw new Error("Failed to fetch room");
+    const socket = io(undefined, { path: '/api/socket_io' });
+    socketRef.current = socket;
 
-        const data: { room?: RoomData } = await res.json();
+    const nickname = localStorage.getItem("userNickname") || "anon";
 
-        if (!data.room) {
-          console.error("Room data ирсэнгүй");
-          return;
-        }
+    socket.on("connect", () => {
+      socket.emit("join", { roomId, name: nickname });
+    });
 
-        const storedNickname = localStorage.getItem("userNickname") || "";
+    socket.on("room_state", (state: { participants: Player[] }) => {
+      const storedNickname = localStorage.getItem("userNickname") || "";
+      const mapped = state.participants.map((p) => ({ ...p, isMe: p.name === storedNickname }));
+      setPlayers(mapped);
+    });
 
-        const initialPlayers: Player[] = data.room.participants.map((p) => ({
-          id: p.id,
-          name: p.name,
-          progress: p.progress || 0,
-          isMe: p.name === storedNickname,
-        }));
+    socket.on("player_update", (player: Player) => {
+      setPlayers((prev) => prev.map((p) => (p.id === player.id ? { ...p, progress: player.progress } : p)));
+      if (player.progress >= 100) setWinner(player.name);
+    });
 
-        setPlayers(initialPlayers);
-      } catch (err) {
-        console.error("Error fetching room:", err);
-      }
+    socket.on("player_joined", (player: Player) => {
+      setPlayers((prev) => (prev.find((p) => p.id === player.id) ? prev : [...prev, player]));
+    });
+
+    socket.on("player_left", (socketId: string) => {
+      setPlayers((prev) => prev.filter((p) => p.socketId !== socketId));
+    });
+
+    return () => {
+      socket.emit("leave", { roomId });
+      socket.disconnect();
+      socketRef.current = null;
     };
-
-    fetchRoom();
   }, [roomId]);
 
-  const handleClick = (id: number) => {
-    if (winner) return;
+  const handleRun = () => {
+    if (!socketRef.current) return;
+    const my = players.find((p) => p.isMe);
+    if (!my || winner) return;
 
     setPlayers((prev) =>
       prev.map((p) => {
-        if (p.id === id) {
-          const newProgress = Math.min(p.progress + 2, 100);
-          if (newProgress >= 100) {
-            setWinner(p.name);
-          }
-          return { ...p, progress: newProgress };
+        if (p.id === my.id) {
+          const next = Math.min(p.progress + 2, 100);
+          if (next >= 100) setWinner(p.name);
+          return { ...p, progress: next };
         }
         return p;
       })
     );
+
+    socketRef.current.emit("run", { roomId });
   };
 
   const resetGame = () => {
-    setPlayers((prev) => prev.map((p) => ({ ...p, progress: 0 })));
+    socketRef.current?.emit("reset", { roomId });
     setWinner(null);
   };
 
@@ -99,33 +102,22 @@ export default function RaceGame() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-indigo-500 to-blue-600 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
-      {/* Glassmorphism card */}
       <div className="relative z-10 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 max-w-xl w-full border border-white/20 space-y-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 drop-shadow-sm">
-          🏁 Running Race
-        </h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800 drop-shadow-sm">🏁 Running Race</h1>
 
         <div className="space-y-6">
           {players.map((player) => (
             <div key={player.id} className="space-y-2">
               <div className="flex justify-between">
-                <span
-                  className={`${
-                    player.isMe ? "font-bold text-indigo-600" : "text-gray-700"
-                  }`}
-                >
+                <span className={`${player.isMe ? "font-bold text-indigo-600" : "text-gray-700"}`}>
                   {player.name}
                 </span>
-                <span className="text-sm text-gray-500">
-                  {player.progress}%
-                </span>
+                <span className="text-sm text-gray-500">{player.progress}%</span>
               </div>
 
               <div className="relative h-10 bg-gray-200 rounded-full overflow-hidden">
                 <div
-                  className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${
-                    player.isMe ? "text-indigo-600" : "text-gray-700"
-                  }`}
+                  className={`absolute top-1/2 -translate-y-1/2 text-2xl transition-all duration-300 ${player.isMe ? "text-indigo-600" : "text-gray-700"}`}
                   style={{ insetInlineStart: `${player.progress}%` }}
                 >
                   🐌
@@ -137,29 +129,21 @@ export default function RaceGame() {
 
         {winner && (
           <div className="text-center space-y-3 mt-4">
-            <div className="font-bold text-green-600 text-xl drop-shadow-sm">
-              🎉 {winner} is the Winner!
-            </div>
-            <Button onClick={resetGame}>🔄 Play Again</Button>
+            <div className="font-bold text-green-600 text-xl drop-shadow-sm">🎉 {winner} is the Winner!</div>
+            <Button onClick={resetGame}>🔁 Play Again</Button>
           </div>
         )}
 
         {!winner && myPlayer && (
           <div className="text-center mt-4">
-            <Button
-              className="w-full sm:w-auto"
-              variant={"destructive"}
-              onClick={() => handleClick(myPlayer.id)}
-            >
+            <Button className="w-full sm:w-auto" variant={"destructive"} onClick={handleRun}>
               Run!
             </Button>
           </div>
         )}
 
         {!winner && !myPlayer && (
-          <div className="text-center mt-4 text-red-600 font-bold drop-shadow-sm">
-            Та тоглогчдын жагсаалтад орсонгүй.
-          </div>
+          <div className="text-center mt-4 text-red-600 font-bold drop-shadow-sm">You are not a participant in this room.</div>
         )}
       </div>
     </div>
