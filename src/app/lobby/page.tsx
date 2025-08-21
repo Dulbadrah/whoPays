@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import RoomLobby from "./components/RoomLobby";
-import { GameStatus, GameType, Room } from "../../../types/type";
+import { GameStatus, GameType, Room } from "../../types/type";
 
 
 export default function LobbyPage() {
@@ -12,9 +12,9 @@ export default function LobbyPage() {
 
   useEffect(() => {
     // Try to get room data from URL parameters first
-    const roomNameFromURL = searchParams.get("roomName");
-    const roomCodeFromURL = searchParams.get("roomCode");
-    const nicknameFromURL = searchParams.get("nickname");
+    const roomNameFromURL = searchParams?.get("roomName");
+    const roomCodeFromURL = searchParams?.get("roomCode");
+    const nicknameFromURL = searchParams?.get("nickname");
 
     // Get stored data as fallback
     const storedRoomData = localStorage.getItem('currentRoom');

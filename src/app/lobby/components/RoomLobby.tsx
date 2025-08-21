@@ -8,7 +8,7 @@ import { ArrowLeft, Users, LogOut } from "lucide-react";
 
 import { GameButton } from "./GameButton";
 import { PlayerCard } from "./PlayerCard";
-import { Room } from "../../../../types/type";
+import { Room } from "../../../types/type";
 
 
 interface RoomLobbyProps {
