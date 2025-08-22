@@ -37,7 +37,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         transports: ['polling', 'websocket'],
         upgrade: true,
         rememberUpgrade: false,
-        timeout: 20000,
+        timeout: 10000, 
         forceNew: false, // Don't force new connection, reuse existing
         autoConnect: true
       });
