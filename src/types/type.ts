@@ -29,6 +29,9 @@ export interface Participant {
   roomId: number;
   createdAt: string;
   isHost: boolean;
+  results: Result[];
+  reasons: Reason[];
+  
 }
 
 export interface Player {

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Server as IOServer } from 'socket.io';
+import { Socket } from 'socket.io-client';
 
 type Player = { id: number; name: string; progress: number; socketId?: string };
 type GameType = 'spin-wheel' | 'Lets-run' | 'Excuse-section' | 'tic-tac-toe';
@@ -10,12 +11,21 @@ const rooms: Record<string, {
   selectedGame?: GameType;
   hostSocketId?: string;
 }> = {};
-
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // This endpoint should only be called once to upgrade to websocket via next's server
-  if (!(res.socket as any).server.io) {
+interface NextApiResponseWithSocket<S = Socket> {
+  
+  socket: import("net").Socket & {
+    server: import("http").Server & {
+      io: import("socket.io").Server;
+    };
+  };
+ 
+}
+ 
+export default function handler(req: NextApiRequest, res: NextApiResponse & NextApiResponseWithSocket) {
+  
+  if (!(res.socket  ).server.io) {
     console.log('Initializing Socket.io server...');
-    const io = new IOServer((res.socket as any).server, {
+    const io = new IOServer((res.socket).server, {
       path: '/api/socket',
       cors: {
         origin: ["http://localhost:3000", "http://localhost:3001"],
@@ -294,7 +304,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // attach to Next.js server instance so it won't be reinitialized
-    (res.socket as any).server.io = io;
+    (res.socket).server.io = io;
   }
 
   res.end();
