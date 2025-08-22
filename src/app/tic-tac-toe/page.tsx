@@ -94,7 +94,7 @@ export default function Page() {
                 {currentPlayer === "X" ? "🦌" : "🦁"}
               </span>{" "}
               <span className="text-blue-600">
-                {currentPlayer === "X" ? "Буга" : "Дугуй"}
+                {currentPlayer === "X" ? "Буга" : "Арслан"}
               </span>
             </p>
           )}
@@ -107,7 +107,7 @@ export default function Page() {
                 </p>
               ) : (
                 <p className="text-2xl font-bold text-green-600">
-                  {winner === "X" ? "🦌 Буга хожлоо!" : "🦁 Дугуй хожлоо!"}
+                  {winner === "X" ? "🦌 Буга хожлоо!" : "🦁 Арслан хожлоо!"}
                 </p>
               )}
             </div>
