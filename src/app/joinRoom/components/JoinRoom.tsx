@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRoomSlug } from "../../../utils/roomSlug";
+import { createApiUrl } from "@/utils/api";
 
 interface Participant {
   id: number;
@@ -52,7 +53,7 @@ export default function JoinRoomForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:4200/participant/join", {
+      const response = await fetch(createApiUrl("/participant/join"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

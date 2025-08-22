@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { io, Socket } from "socket.io-client";
 import { ExcuseBackground } from "@/app/(game)/excuseSection/components/ExcuseBackground";
+import { API_BASE_URL } from "@/utils/api";
 
 const Wheel = dynamic(
   () => import("react-custom-roulette").then((mod) => mod.Wheel),
@@ -19,7 +20,7 @@ const Spin: React.FC = () => {
   const [newOption, setNewOption] = useState("");
 
   useEffect(() => {
-    socket = io("http://localhost:4200");
+    socket = io(API_BASE_URL);
 
     // Receive wheel data from server
     socket.on("updateWheel", (wheelData: { option: string }[]) => {
@@ -159,7 +160,7 @@ export default Spin;
 //   const games = ["Spin Wheel", "Excuse Section", "Tic Tac Toe"];
 
 //   useEffect(() => {
-//     socket = io("http://localhost:4200");
+//     socket = io(API_BASE_URL);
 
 //     socket.on("gameSelected", (game: { name: string }) => {
 //       router.push(`/game/${game.name.toLowerCase().replace(/\s+/g, '-')}`);

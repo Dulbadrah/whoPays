@@ -15,7 +15,7 @@ export interface Room {
   id: number;
   code: string;
   roomname: string;
-  createdAt: string; // ISO string for frontend
+  createdAt: string; 
   gameType: GameType;
   gamestatus: GameStatus;
   results: Result[];
@@ -132,4 +132,19 @@ export interface GameProps {
   icon: React.ComponentType<{ size: number; className?: string }>;
   color: string;
   textColor: string;
+}
+
+export interface RoomDataResponse {
+  room?: {
+    id: number;
+    code: string;
+    roomname: string;
+    createdAt?: string;
+    gameType?: string;
+    gamestatus?: string;
+    results?: string[];
+    participants?: string[];
+    message?: string[];
+  };
+  message?: string;
 }

@@ -29,7 +29,8 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
 
   useEffect(() => {
     if (room && typeof window !== 'undefined') {
-      const socketInstance = io('http://localhost:3000', {
+      const port = process.env.PORT || 3000;
+      const socketInstance = io(`http://localhost:${port}`, {
         path: '/api/socket',
         transports: ['polling', 'websocket'],
         upgrade: true,

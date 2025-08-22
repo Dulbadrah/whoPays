@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { createApiUrl } from "@/utils/api";
 
 export const ExcuseForm = () => {
   const [reason, setReason] = useState<string>("");
@@ -25,7 +26,7 @@ export const ExcuseForm = () => {
     setStatusMessage(null);
 
     try {
-      const response = await fetch(`http://localhost:4200/roast`, {
+      const response = await fetch(createApiUrl("/roast"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

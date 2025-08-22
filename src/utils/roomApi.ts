@@ -1,24 +1,10 @@
-// src/utils/roomApi.ts
-export interface RoomDataResponse {
-  room?: {
-    id: number;
-    code: string;
-    roomname: string;
-    createdAt?: string;
-    gameType?: string;
-    gamestatus?: string;
-    results?: string[];
-    participants?: string[];
-    message?: string[];
-  };
-  message?: string;
-}
+import { createApiUrl } from "./api";
+import { Room, RoomDataResponse } from "@/types/type";
 
-import { Room } from "@/types/type";
 
 export const createRoom = async (roomName: string, hostNickname: string) => {
   try {
-    return await fetch(`http://localhost:4200/room`, {
+    return await fetch(createApiUrl("/room"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +18,7 @@ export const createRoom = async (roomName: string, hostNickname: string) => {
 }
 
  export const checkRoomExists = async (code: string) => {
-  const res = await fetch(`http://localhost:4200/room/${code}`, {
+  const res = await fetch(createApiUrl(`/room/${code}`), {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -42,7 +28,7 @@ export const createRoom = async (roomName: string, hostNickname: string) => {
 
 export const checkRoomNameUnique = async (roomName: string) => {
   try {
-    return await fetch(`http://localhost:4200/room/check-name`, {
+    return await fetch(createApiUrl("/room/check-name"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +43,7 @@ export const checkRoomNameUnique = async (roomName: string) => {
 
 
 export const checkNicknameAvailable = async (roomCode: string, nickname: string) => {
-  const res = await fetch(`http://localhost:4200/room/${roomCode}/check-nickname`, {
+  const res = await fetch(createApiUrl(`/room/${roomCode}/check-nickname`), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nickname }),
@@ -66,7 +52,7 @@ export const checkNicknameAvailable = async (roomCode: string, nickname: string)
 };
 
 export const addParticipantToRoom = async (roomCode: string, nickname: string) => {
-  const res = await fetch(`http://localhost:4200/room/${roomCode}/participants`, {
+  const res = await fetch(createApiUrl(`/room/${roomCode}/participants`), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nickname }),
@@ -76,7 +62,7 @@ export const addParticipantToRoom = async (roomCode: string, nickname: string) =
 
 export const fetchRoomData = async (roomCode: string) => {
   try {
-    const res = await fetch(`http://localhost:4200/room/${roomCode}`, {
+    const res = await fetch(createApiUrl(`/room/${roomCode}`), {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -104,7 +90,7 @@ export const pollRoomData = (roomCode: string, callback: (room: Room) => void, )
 
 const roomApi = {
   createRoom: async (roomName: string, hostNickname: string) => {
-    const res = await fetch(`http://localhost:4200/room`, {
+    const res = await fetch(createApiUrl("/room"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ roomName, hostNickname }),
@@ -113,7 +99,7 @@ const roomApi = {
   },
 
   checkRoomExists: async (code: string) => {
-    const res = await fetch(`http://localhost:4200/room/${code}`, {
+    const res = await fetch(createApiUrl(`/room/${code}`), {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -122,7 +108,7 @@ const roomApi = {
   },
 
   checkRoomNameUnique: async (roomName: string) => {
-    const res = await fetch(`http://localhost:4200/room/check-name`, {
+    const res = await fetch(createApiUrl("/room/check-name"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ roomName }),
@@ -131,7 +117,7 @@ const roomApi = {
   },
 
   checkNicknameAvailable: async (roomCode: string, nickname: string) => {
-    const res = await fetch(`http://localhost:4200/room/${roomCode}/check-nickname`, {
+    const res = await fetch(createApiUrl(`/room/${roomCode}/check-nickname`), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nickname }),
@@ -140,7 +126,7 @@ const roomApi = {
   },
 
   addParticipantToRoom: async (roomCode: string, nickname: string) => {
-    const res = await fetch(`http://localhost:4200/room/${roomCode}/participants`, {
+    const res = await fetch(createApiUrl(`/room/${roomCode}/participants`), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nickname }),
@@ -149,7 +135,7 @@ const roomApi = {
   },
 
   fetchRoomData: async (roomCode: string) => {
-    const res = await fetch(`http://localhost:4200/room/${roomCode}`, {
+    const res = await fetch(createApiUrl(`/room/${roomCode}`), {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
