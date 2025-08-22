@@ -30,7 +30,7 @@ export default function RoomLobbyPage() {
       return;
     }
 
-    const { roomName, roomCode } = slugData;
+    const { roomCode } = slugData;
     const nickname = searchParams ? getNickname(searchParams) : null;
 
     if (!nickname) {

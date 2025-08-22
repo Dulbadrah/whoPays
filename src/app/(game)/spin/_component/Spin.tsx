@@ -12,7 +12,7 @@ const Wheel = dynamic(
 let socket: Socket;
 
 const Spin: React.FC = () => {
-  const [otherSelections, setOtherSelections] = useState<string[]>([]);
+  
   const [data, setData] = useState<{ option: string }[]>([]);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
@@ -59,10 +59,7 @@ const Spin: React.FC = () => {
     socket.emit("removeOption", index);
   };
 
-  const handleSelectGame = () => {
-    // Send selected game to server
-    socket.emit("selectGame", { id: Date.now().toString(), name: "Puzzle" });
-  };
+
   const backgroundColors = [
     "#2EB6FF",
     "#5CFF87",

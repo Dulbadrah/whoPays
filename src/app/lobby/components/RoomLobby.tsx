@@ -5,7 +5,10 @@ import { io, Socket } from "socket.io-client";
 
 import * as roomUtils from "@/utils/roomUtils";
 
-import { ArrowLeft, Users, LogOut } from "lucide-react";
+
+
+import { ArrowLeft, Users, LogOut, Target, Dice6, Trophy, Gamepad2 } from "lucide-react";
+
 
 import { GameButton } from "./GameButton";
 import { PlayerCard } from "./PlayerCard";
@@ -202,41 +205,41 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
       alert('Failed to remove player. Please try again.');
     }
   };
+const games = [
+  {
+    id: "spin-wheel",
+    name: "Азаа үзэе!",
+    icon: Target,
+    description: "Азын эргэлт",
+    color: "bg-red-400 hover:bg-red-500 border-red-600",
+    textColor: "text-red-900",
+  },
+  {
+    id: "Lets-run",
+    name: "Бүгдээрээ гүйцгээе!",
+    icon: Dice6,
+    description: "Товч дараад гүй!",
+    color: "bg-green-400 hover:bg-green-500 border-green-600",
+    textColor: "text-green-900",
+  },
+  {
+    id: "Excuse-section",
+    name: "Шалтаг тоочье!",
+    icon: Trophy,
+    description: "Хэн нь сайн шалтаг тоочих вэ?",
+    color: "bg-purple-400 hover:bg-purple-500 border-purple-600",
+    textColor: "text-purple-900",
+  },
+  {
+    id: "tic-tac-toe",
+    name: "Tic Tac Toe",
+    icon: Gamepad2,
+    description: "Tic Tac Toe",
+    color: "bg-orange-400 hover:bg-orange-500 border-orange-600",
+    textColor: "text-orange-900",
+  },
+];
 
-  const games = [
-    {
-      id: "spin-wheel",
-      name: "Азаа үзэе!",
-      icon: require("lucide-react").Target,
-      description: "Азын эргэлт",
-      color: "bg-red-400 hover:bg-red-500 border-red-600",
-      textColor: "text-red-900",
-    },
-    {
-      id: "Lets-run",
-      name: "Бүгдээрээ гүйцгээе!",
-      icon: require("lucide-react").Dice6,
-      description: "Товч дараад гүй!",
-      color: "bg-green-400 hover:bg-green-500 border-green-600",
-      textColor: "text-green-900",
-    },
-    {
-      id: "Excuse-section",
-      name: "Шалтаг тоочье!",
-      icon: require("lucide-react").Trophy,
-      description: "Хэн нь сайн шалтаг тоочих вэ?",
-      color: "bg-purple-400 hover:bg-purple-500 border-purple-600",
-      textColor: "text-purple-900",
-    },
-    {
-      id: "tic-tac-toe",
-      name: "Tic Tac Toe",
-      icon: require("lucide-react").Gamepad2,
-      description: "Tic Tac Toe",
-      color: "bg-orange-400 hover:bg-orange-500 border-orange-600",
-      textColor: "text-orange-900",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-300 via-sky-200 to-blue-70 p-4">

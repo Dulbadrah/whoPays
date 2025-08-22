@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 
 export const ExcuseForm = () => {
   const [reason, setReason] = useState<string>("");
@@ -48,11 +48,14 @@ export const ExcuseForm = () => {
           setStatusMessage(data.message);
         }
       }
-    } catch (err: string | any) {
-      setError(err.message || "Сервертэй холбогдоход алдаа гарлаа");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Сервертэй холбогдоход алдаа гарлаа";
+      setError(message);
     }
+    setLoading(false);
   };
 
   return (

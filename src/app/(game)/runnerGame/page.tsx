@@ -117,7 +117,7 @@ export default function RaceGame() {
       );
       
       // Check for winner
-      if (player.progress >= 100 && !winner) {
+      if (player.progress >= 100 && !winner) {    
         setWinner(player.name);
         setIsGameActive(false);
       }

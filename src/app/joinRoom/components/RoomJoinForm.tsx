@@ -16,10 +16,7 @@ export default function JoinRoomForm() {
   const [nickname, setNickname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [roomData, setRoomData] = useState<{
-    name: string;
-    code: string;
-  } | null>(null);
+
 
   const router = useRouter();
 
@@ -102,7 +99,6 @@ export default function JoinRoomForm() {
       );
       localStorage.setItem("userNickname", trimmedNickname);
 
-      setRoomData({ name: roomName, code: roomCode });
       setIsLoading(false);
 
       handleNavigateToLobby(roomName, roomCode);
