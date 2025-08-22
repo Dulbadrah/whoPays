@@ -81,9 +81,11 @@ export async function validateAdminKey(candidate: string) {
   try {
     let res = await fetch('/admin/me', { headers: { 'x-admin-key': candidate } });
     if (res.ok) return true;
+
     res = await fetch('/admin/me', { headers: { Authorization: `Bearer ${candidate}` } });
     return res.ok;
-  } catch (error) {
+  } catch (_) {  // <-- catch (error) → catch (_)
     return false;
   }
 }
+

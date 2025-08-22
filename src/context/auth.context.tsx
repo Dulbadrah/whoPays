@@ -28,7 +28,7 @@ export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) =
     setLoading(true);
     const ok = await validateAdminKey(key);
     if (ok) {
-      try { localStorage.setItem('adminKey', key); } catch (error) {}
+      try { localStorage.setItem('adminKey', key); } catch {}
       setAdminKey(key);
       setIsAuthenticated(true);
     }
@@ -37,7 +37,7 @@ export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) =
   };
 
   const logout = () => {
-    try { localStorage.removeItem('adminKey'); } catch (error) {}
+    try { localStorage.removeItem('adminKey'); } catch {}
     setAdminKey(null);
     setIsAuthenticated(false);
   };
