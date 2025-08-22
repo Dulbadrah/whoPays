@@ -144,7 +144,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         socketInstance.disconnect();
       };
     }
-  }, [room?.code]); // Only depend on room code, not entire room object
+  }, [room, onRoomUpdate]); // Only depend on room code, not entire room object
 
   if (!room) {
     return (

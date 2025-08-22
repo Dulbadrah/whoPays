@@ -84,8 +84,9 @@ export async function validateAdminKey(candidate: string) {
 
     res = await fetch('/admin/me', { headers: { Authorization: `Bearer ${candidate}` } });
     return res.ok;
-  } catch (_) {  // <-- catch (error) → catch (_)
+  } catch {
     return false;
   }
 }
+
 

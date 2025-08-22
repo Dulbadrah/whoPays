@@ -167,7 +167,7 @@ export default function RaceGame() {
       }
       socketRef.current = null;
     };
-  }, [roomCode, nickname]);
+  }, [roomCode, nickname, winner]);
 
   const handleRun = () => {
     if (!socketRef.current || !roomCode || !isGameActive) return;

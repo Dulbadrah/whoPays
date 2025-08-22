@@ -1,17 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Server as IOServer } from 'socket.io';
-import { Socket } from 'socket.io-client';
 
 type Player = { id: number; name: string; progress: number; socketId?: string };
 type GameType = 'spin-wheel' | 'Lets-run' | 'Excuse-section' | 'tic-tac-toe';
 
+type RoomState = {
+  participants: Player[];
+  selectedGame?: GameType;
+};
 // Keep rooms in-memory for dev only
 const rooms: Record<string, { 
   participants: Player[]; 
   selectedGame?: GameType;
   hostSocketId?: string;
 }> = {};
-interface NextApiResponseWithSocket<S = Socket> {
+interface NextApiResponseWithSocket<  T> extends NextApiResponse<T> {
   
   socket: import("net").Socket & {
     server: import("http").Server & {
@@ -21,7 +24,7 @@ interface NextApiResponseWithSocket<S = Socket> {
  
 }
  
-export default function handler(req: NextApiRequest, res: NextApiResponse & NextApiResponseWithSocket) {
+export default function handler(req: NextApiRequest, res: NextApiResponse<RoomState> & NextApiResponseWithSocket<RoomState>) {
   
   if (!(res.socket  ).server.io) {
     console.log('Initializing Socket.io server...');

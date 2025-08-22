@@ -16,7 +16,9 @@ export const removeParticipant = async (socket: Socket | null, roomCode: string,
     }
 
     // Set up one-time listeners for the response
-    const onError = (error: any) => {
+    const onError = (error: Error | { messege:string
+    
+    }) => {
       console.error('Error removing participant:', error);
       socket.off('room_state', onSuccess);
       resolve(false);
