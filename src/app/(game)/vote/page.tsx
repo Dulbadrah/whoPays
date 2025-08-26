@@ -29,7 +29,7 @@ export default function Page() {
   const vote = (id: string) => socket.emit("vote", { code: roomCode, votedId: id });
 
   return (
-    <div className="p-6 max-w-lg mx-auto text-center min-h-screen bg-gradient-to-br from-purple-100 to-blue-100">
+    <div className="p-6 max-w-lg mx-auto text-center min-h-screen-20 bg-gradient-to-br from-purple-100 to-blue-100 ">
       {/* Room code */}
       <div className="mb-6">
         <h2 className="text-3xl font-extrabold tracking-widest text-purple-700 drop-shadow">Room: {roomCode}</h2>
